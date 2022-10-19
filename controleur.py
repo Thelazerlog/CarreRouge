@@ -7,7 +7,7 @@ from c31Geometry2 import *
 from functools import partial
 
 class MenuControleur:
-    def __init__(self, root,  jeuControleur) :
+    def __init__(self, root, jeuControleur) :
         self.jeuControleur = jeuControleur
         self.vue = MenuVue(root, self.nouvellePartie(),self.quitter())
         #nom = self.vue.demanderNom(root)
@@ -19,14 +19,14 @@ class MenuControleur:
     def nouvellePartie(self) :
         if self.jeuControleur.demarrerPartie() :
             root = self.jeuControleur.vue.root
-            #self.jeuControleur.vue.destroy()     ##### A voir avec l'equipe : le destroy()
+            self.jeuControleur.vue.destroy()  
             self.jeuControleur = JeuControleur(root)
         
         self.jeuControleur.debuter()
         self.jeuControleur.nouvellePartie = self.nouvellePartie
 
     def quitter(self) :
-       #self.root.destroy() a faire 
+       #self.jeuControleur.vue.destroy()
        test= 1
 
 
@@ -45,6 +45,8 @@ class JeuControleur :
         self.vue.setNom(self.nom)
         self.difficulte = self.vue.demanderDif(root)
         self.vue.setDif(self.difficulte)
+        
+
 
         self.rectangleBleu = []
         for i in range(0, 4) :
@@ -204,6 +206,6 @@ class JeuControleur :
         deplacement = Vecteur(posX, posY) 
         x = str(posX)  # transforme les int en string 
         y = str(posY)
-        newPosition = x + "x" + y # construit une string position
+        #newPosition = x + "x" + y # construit une string position
         self.carreRouge.translate(deplacement) # TODO : pas sur de ce qui se passe ici
         self.carreRouge.setPosition(posX, posY)

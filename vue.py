@@ -33,7 +33,8 @@ class JeuVue:
         self.nom.pack(ipadx=10, ipady=10, anchor=tk.SW)
         self.canvas.pack(side=tk.RIGHT)
 
-        
+    def destroy(self):
+        self.canvas.destroy()
        
     def draw(self) : # dessine les item ( carre et rectangle)
         for item in self.items :

@@ -16,9 +16,9 @@ if __name__ == "__main__" :
     game.pack()
 
     # appeler le controlleur ici.
-    #menu = MenuControleur
-    #menu.debuter()
     jeu = JeuControleur(root)
-    jeu.debuter()
+    menu = MenuControleur(root,jeu)
+    menu.debuter()
+    
     
     root.mainloop()

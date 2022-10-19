@@ -29,7 +29,7 @@ class JeuVue:
         self.items = []
         #a VOIR et tester 
         self.timer.pack(ipadx=10, ipady=10, anchor=tk.NE)
-        self.difficulter.pack(ipadx=10, ipady=10, anchor=tk.SE)
+        self.difficulter.pack(ipadx=10, ipady=10, anchor=tk.SW)
         self.nom.pack(ipadx=10, ipady=10, anchor=tk.SW)
         self.canvas.pack(side=tk.RIGHT)
 

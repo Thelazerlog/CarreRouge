@@ -7,9 +7,9 @@ from c31Geometry2 import *
 from functools import partial
 
 class MenuControleur:
-    def __init__(self, root, fermerJeu, jeuControleur) :
+    def __init__(self, root,  jeuControleur) :
         self.jeuControleur = jeuControleur
-        self.vue = MenuVue(root, self.nouvellePartie(), fermerJeu)
+        self.vue = MenuVue(root, self.nouvellePartie(),self.quitter())
         #nom = self.vue.demanderNom(root)
         #self.vue.setNom(nom)
 
@@ -19,15 +19,15 @@ class MenuControleur:
     def nouvellePartie(self) :
         if self.jeuControleur.demarrerPartie() :
             root = self.jeuControleur.vue.root
-            vue = self.jeuControleur.vue
-            self.jeuControleur.vue.destroy()     ##### A voir avec l'equipe : le destroy()
-            self.jeuControleur = JeuControleur(root, vue)
+            #self.jeuControleur.vue.destroy()     ##### A voir avec l'equipe : le destroy()
+            self.jeuControleur = JeuControleur(root)
         
         self.jeuControleur.debuter()
         self.jeuControleur.nouvellePartie = self.nouvellePartie
 
     def quitter(self) :
-       self.root.destroy()
+       #self.root.destroy() a faire 
+       test= 1
 
 
 class JeuControleur :

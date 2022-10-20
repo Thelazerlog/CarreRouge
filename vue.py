@@ -47,15 +47,15 @@ class JeuVue:
         self.nom.config(text= "Nom du joueur : " + nom )
 
     def setDif(self,difficulter) :
+        self.difficulter.config(text= "Difficulté : " + difficulter)
+    
+    def demanderDif(self,root) :
         reponse = ''
         while reponse != '1' or reponse != '2' or reponse != '3' :
             reponse = simpledialog.askstring("Input","Entrez le niveau de difficulté désiré (1, 2, 3)",parent=root)
             if reponse == '1' or reponse == '2' or reponse == '3' :
                 break
-        return reponse
-    
-    def demanderDif(self,root) :
-        return simpledialog.askstring("Input","Entrez le niveau de difficulté désiré (1, 2, 3)",parent=root) 
+        return reponse 
 
     def setTimer(self,temp) :
         self.timer.config(text= "Mineuteur : " + str(temp) + "s")

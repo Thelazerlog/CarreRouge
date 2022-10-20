@@ -103,11 +103,12 @@ class RectangleBleu(Polygone):
 
 class BordureNoire(Polygone):
     def __init__(self, x, y, canvas):
-        super().__init__(canvas, Vecteur(self.x,self.y), "black", "black", 0)
         self.x = x
         self.y = y
         self.largeur = 450
         self.hauteur = 540
+        super().__init__(canvas, Vecteur(self.x,self.y), "black", "black", 0)
+
 
     def getHauteur(self):
         return self.hauteur
@@ -123,11 +124,12 @@ class BordureNoire(Polygone):
 
 class ZoneBlanche(Polygone):
     def __init__(self, x, y, canvas):
-        super().__init__(canvas, Vecteur(self.x,self.y), "white", "white", 0)
         self.x = x
         self.y = y
         self.largeur = 400
         self.hauteur = 490
+        super().__init__(canvas, Vecteur(self.x,self.y), "white", "white", 0)
+
 
     def getHauteur(self):
         return self.hauteur

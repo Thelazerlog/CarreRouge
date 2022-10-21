@@ -1,18 +1,16 @@
 # -*- coding: utf8 -*-
+import random
 from c31Geometry2 import *
 
-class CarreRouge(Polygone):
-    def __init__(self, axe, canvas):
-        super().__init__(canvas, Vecteur(self.x, self.y), "red", "red", 0)
-        self.axeDeplacement = axe
+class CarreRouge(Carre):
+    def __init__(self, canvas):
+        self.axeDeplacement = random.randint(0, 3)
         self.arrete = 40
-        self.x = 225
-        self.y = 225
+        super().__init__(canvas, Vecteur(225, 225), self.arrete, self.axeDeplacement , "red", "red", 0)
 
-    def getX(self):
-        return self.x
-    def getY(self):
-        return self.y
+
+    def getOrigine(self) -> Vecteur:
+        return super().get_origine()
 
     def getArrete(self):
         return self.arrete
@@ -20,63 +18,46 @@ class CarreRouge(Polygone):
     def getAxe(self):
         return self.axeDeplacement
 
-    def setPosition(self, x, y):
-        self.x = x
-        self.y = y
-    
     def setAxe(self, axe):
         self.axeDeplacement = axe
         
     def getPosition(self):
-        return str(self.getX()) + "x" + str(self.getY())
+        return  super().get_origine().x + "x"  + super().get_origine().y
 
-class RectangleBleu(Polygone):
-    def __init__(self, vitesse, rectangleChiffre, axe, canvas):
+    def translateTo(self, position: Vecteur) -> None:
+        return super().translateTo(position)
+
+class RectangleBleu(Rectangle):
+    def __init__(self, vitesse, rectangleChiffre, canvas):
+        self.vitesse = vitesse
+        self.axeDeplacement = random.randint(0, 3)
         if rectangleChiffre == 1: #Rectangle superieur gauche
             self.largeur = 60
             self.hauteur = 60
+            super().__init__(canvas, Vecteur(100,100),self.largeur ,self.hauteur, self.axeDeplacement, "blue", "blue", 1)
 
         elif rectangleChiffre == 2:  #Rectangle superieur droit
             self.largeur = 60
             self.hauteur = 50
+            super().__init__(canvas, Vecteur(300,85),self.largeur ,self.hauteur, self.axeDeplacement, "blue", "blue", 1)
+
 
         elif rectangleChiffre == 3: #Rectangle inferieur gauche
             self.largeur = 30
             self.hauteur = 60
+            super().__init__(canvas, Vecteur(85,300),self.largeur ,self.hauteur, self.axeDeplacement, "blue", "blue", 1)
+
 
         elif rectangleChiffre == 4: #Rectangle inferieur droit
             self.largeur = 100
             self.hauteur = 20
-
-        if rectangleChiffre == 1: #Rectangle superieur gauche
-            self.x = 100
-            self.y = 100
-        elif rectangleChiffre == 2:  #Rectangle superieur droit
-            self.x = 300
-            self.y = 85
-
-        elif rectangleChiffre == 3: #Rectangle inferieur gauche
-            self.x = 85
-            self.y = 300
-
-        elif rectangleChiffre == 4: #Rectangle inferieur droit
-            self.x = 355
-            self.y = 340
-
-        self.vitesse = vitesse
-        self.axeDeplacement = axe
-        
-        super().__init__(canvas, Vecteur(self.x,self.y), "blue", "blue", 1)
-
+            super().__init__(canvas, Vecteur(355,340),self.largeur ,self.hauteur, self.axeDeplacement, "blue", "blue", 1)       
  
     def getAxe(self):
         return self.axeDeplacement
 
-    def getX(self):
-        return self.x
-
-    def getY(self):
-        return self.y
+    def getOrigine(self) -> Vecteur:
+        return super().get_origine()
 
     def getHauteur(self):
         return self.hauteur
@@ -86,10 +67,6 @@ class RectangleBleu(Polygone):
 
     def getVitesse(self):
         return self.vitesse
-
-    def setPosition(self, x, y):
-        self.x = x  
-        self.y = y
  
     def setVitesse(self, vitesse):
         self.vitesse = vitesse 
@@ -98,17 +75,17 @@ class RectangleBleu(Polygone):
         self.axeDeplacement = axe
         
     def getPosition(self):
-        return str(self.x) + "x" + str(self.y)
+        return  super().get_origine().x + "x"  + super().get_origine().y
+
+    def translateTo(self, position: Vecteur) -> None:
+        return super().translateTo(position)
 
 
-class BordureNoire(Polygone):
+class BordureNoire(Rectangle):
     def __init__(self, x, y, canvas):
-        self.x = x
-        self.y = y
         self.largeur = 450
         self.hauteur = 540
-        super().__init__(canvas, Vecteur(self.x,self.y), "black", "black", 0)
-
+        super().__init__(canvas, Vecteur(x,y), self.largeur, self.hauteur, 0, "black", "black", 0)
 
     def getHauteur(self):
         return self.hauteur
@@ -116,20 +93,14 @@ class BordureNoire(Polygone):
     def getLargeur(self):
         return self.largeur
 
-    def getX(self):
-        return self.x
+    def getOrigine(self) -> Vecteur:
+        return super().get_origine()
 
-    def getY(self):
-        return self.y
-
-class ZoneBlanche(Polygone):
+class ZoneBlanche(Rectangle):
     def __init__(self, x, y, canvas):
-        self.x = x
-        self.y = y
         self.largeur = 400
         self.hauteur = 490
-        super().__init__(canvas, Vecteur(self.x,self.y), "white", "white", 0)
-
+        super().__init__(canvas, Vecteur(x,y), self.largeur, self.hauteur, 0, "white", "white", 0)
 
     def getHauteur(self):
         return self.hauteur
@@ -137,8 +108,5 @@ class ZoneBlanche(Polygone):
     def getLargeur(self):
         return self.largeur
     
-    def getX(self):
-        return self.x
-
-    def getY(self):
-        return self.y
+    def getOrigine(self) -> Vecteur:
+        return super().get_origine()

@@ -1,3 +1,4 @@
+from cmath import rect
 from vue import JeuVue, MenuVue
 from modeles import BordureNoire, ZoneBlanche, CarreRouge, RectangleBleu
 import csv
@@ -37,30 +38,29 @@ class JeuControleur :
         self.partieDemarree = False
         self.nouvellePartie = lambda : print("Nouvelle partie")    
         self.vue = JeuVue(root)
-        self.bordureNoire = BordureNoire(0, 0, self.vue.canvas, Vecteur(0, 0), "black", "black", 0)  
-        self.zoneBlanche = ZoneBlanche(75, 75, self.vue.canvas, Vecteur(0, 0), "white", "white", 0) 
-        self.carreRouge = CarreRouge(0, self.vue.canvas, Vecteur(225, 225), "red", "red", 0)
+        self.bordureNoire = BordureNoire(0, 0, self.vue.canvas) 
+        self.zoneBlanche = ZoneBlanche(75, 75, self.vue.canvas) 
+        self.carreRouge = CarreRouge(0, self.vue.canvas)
         self.vecteurC = Vecteur(self.carreRouge.getX(), self.carreRouge.getY())
         self.nom = self.vue.demanderNom(root)
         self.vue.setNom(self.nom)
         self.difficulte = self.vue.demanderDif(root)
         self.vue.setDif(self.difficulte)
         
-
-
         self.rectangleBleu = []
         for i in range(0, 4) :
-            self.rectangleBleu.append(RectangleBleu(1, i+1, 0, self.vue.canvas, "blue", "blue", 10))   # on place les rectangles bleus
+            self.rectangleBleu.append(RectangleBleu(1,i+1,0, self.vue.canvas))   # on place les rectangles bleus
             self.vecteurR = Vecteur(self.rectangleBleu[i].getX(), self.rectangleBleu[i].getY())
             self.vue.addRectangle(self.vecteurR, self.rectangleBleu[i].getLargeur(), self.rectangleBleu[i].getHauteur(),0, "blue", "blue", 1)
         self.vue.addCarre(self.vecteurC, self.carreRouge.getArrete(),0, "red", "red", 0)
-        #self.__defineEvent()
+        self.__defineEvent()
         
     def demarrerPartie(self) :
         return self.partieDemarree
+    
 
     def __defineEvent(self) :
-        self.vue.setListen("<ButtonPress-1>", self.evenement())
+        self.carreRouge.bind("<ButtonPress-1>", self.evenement())
 
     def evenement(self) :
         self.deplacementCarreRouge()
@@ -129,11 +129,8 @@ class JeuControleur :
     
     def deplacementRectangleBleu(self) :
         for i in range(0, 4) :
-            positionInit = self.rectangleBleu[i].getPosition() # renvoie une string de format : "100x45", "35x550"
-            positionInit = positionInit.split("x") # séparation de la string, puis attribution des valeurs à la position en x et en y
-            x = positionInit[0]
-            y = positionInit[1]
-
+            x = self.rectangleBleu[i].getX()
+            y = self.rectangleBleu[i].getY()
             '''
             deplacement : 
                 axeDeplacement :
@@ -143,62 +140,58 @@ class JeuControleur :
                     3 = sud-ouest
                     4 = ... fonctionnalités futures
             '''
-    
             self.rectangleBleu[i].setAxe(random.randint(0, 3))
-            if self.verifierCollision() == False :                                                
-                if(self.rectangleBleu[i].getAxe() == 0) :
-                    x -= 1
-                    y -= 1
-                elif(self.rectangleBleu[i].getAxe() == 1) :
-                    x += 1
-                    y -= 1
-                elif(self.rectangleBleu[i].getAxe() == 2) :
-                    x += 1
-                    y += 1
-                elif(self.rectangleBleu[i].getAxe() == 3) :
-                    x -= 1
-                    y += 1
-            else :
-                if(self.rectangleBleu[i].getPosition() == "0x0") : #coin nord-ouest
-                    self.rectangleBleu[i].setAxe(2)
-                if(self.rectangleBleu[i].getPosition() == "400x0") : #coin nord-est
-                    self.rectangleBleu[i].setAxe(3)       
-                if(self.rectangleBleu[i].getPosition() == "400x490") : #coin sud-est
-                    self.rectangleBleu[i].setAxe(0)
-                if(self.rectangleBleu[i].getPosition() == "0x490") : #coin sud-ouest
+            
+            # DÉTECTION DE COLLISIONS LATÉRALES 
+            if x == 0 : #collision bordure gauche (axes de directions ouest deviennent de direction est)
+                if self.rectangleBleu[i].getAxe() == 0 :
                     self.rectangleBleu[i].setAxe(1)
-                
-                position = self.rectangleBleu[i].getPosition()
-                position = position.split("x")
-                x = position[0]
-                y = position[1]
-                currentAxeDeplacement = self.rectangleBleu[i].getAxe()
-                if y == 0 : #bordure du haut mais pas les coins             
-                    if(currentAxeDeplacement == 0):
-                        self.rectangleBleu[i].setAxe(3) #si vers nord-ouest, rebondi vers sud-ouest      
-                    else :
-                        self.rectangleBleu[i].setAxe(2) #si vers nord-est, rebondi vers sud-est
-                if(y == 490) : #bordure du bas
-                    if(currentAxeDeplacement == 2) :
-                        self.rectangleBleu[i].setAxe(1) #si vers sud-est, rebondi vers nord-est
-                    else :
-                        self.rectangleBleu[i].setAxe(0) #si vers sud-ouest, rebondi vers nord-ouest
-                if(x == 0) : #bordure de gauche
-                    if(currentAxeDeplacement == 0) :
-                        self.rectangleBleu[i].setAxe(1) #si vers nord-ouest, rebondi vers nord-est
-                    else :
-                        self.rectangleBleu[i].setAxe(2) #si vers sud-ouest, rebondi vers sud-est
-                if(x == 400) : #bordure de droite
-                    if(currentAxeDeplacement == 1) :
-                        self.rectangleBleu.setAxe(0) #si vers nord-est, rebondi vers nord-ouest
-                    else :
-                        self.rectangleBleu.setAxe(3) #si vers sud-est, rebondi vers sud-ouest
+                else : 
+                    self.rectangleBleu[i].setAxe(2)
+            if x == 400 : #collision bordure droite (axes de directions est deviennent de direction ouest)
+                if self.rectangleBleu[i].getAxe() == 2 :
+                    self.rectangleBleu[i].setAxe(3)
+                else :
+                    self.rectangleBleu[i].setAxe(1)
+            if y == 0 : #collision bordure haut (axes de directions nord deviennent de direction sud)
+                if self.rectangleBleu[i].getAxe() == 1 :
+                    self.rectangleBleu[i].setAxe(2)
+                else :
+                    self.rectangleBleu[i].setAxe(3)
+            if y == 490 : #collision bordure bas (axes de directions sud deviennent de direction nord)
+                if self.rectangleBleu[i].getAxe() == 2 :
+                    self.rectangleBleu[i].setAxe(1)
+                else :
+                    self.rectangleBleu[i].setAxe(0)
+            
+            # DÉTECTION DE COLLISIONS DANS LES COINS 
+            if(self.rectangleBleu[i].getPosition() == "0x0") : #coin nord-ouest
+                    self.rectangleBleu[i].setAxe(2)
+            if(self.rectangleBleu[i].getPosition() == "400x0") : #coin nord-est
+                    self.rectangleBleu[i].setAxe(3)       
+            if(self.rectangleBleu[i].getPosition() == "400x490") : #coin sud-est
+                    self.rectangleBleu[i].setAxe(0)
+            if(self.rectangleBleu[i].getPosition() == "0x490") : #coin sud-ouest
+                    self.rectangleBleu[i].setAxe(1)
+            
+            # DÉPLACEMENT LOGIQUE
+            if self.rectangleBleu[i].getAxe() == 0 :
+                    x -= 100
+                    y -= 100
+            elif self.rectangleBleu[i].getAxe() == 1 :
+                    x += 100
+                    y -= 100
+            elif self.rectangleBleu[i].getAxe() == 2 :
+                    x += 100
+                    y += 100
+            elif self.rectangleBleu[i].getAxe() == 3 :
+                    x -= 100
+                    y += 100
 
-            newPosition = x + "x" + y # reconstruction d'une string de format "99x44", "34x549" 
-            deplacement = Vecteur(x, y)                                                          
-            #RectangleBleu.translate(deplacement) # effectue une translation de 1 pixel en diagonal    
-            self.rectangleBleu[i].setPosition(Polygone.translate(deplacement))                                             
-            self.rectangleBleu[i].setPosition(newPosition)       
+            # AFFECTATIONS MODÈLES & VUE
+            deplacement = Vecteur(x, y)
+            self.rectangleBleu[i].setPosition(x, y)
+                                                                             
                                             
     def deplacementCarreRouge(self) : 
         posX = self.vue.root.winfo_pointerx #recoit position du curseur             

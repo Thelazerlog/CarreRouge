@@ -87,7 +87,6 @@ class BordureNoire(Rectangle):
         self.hauteur = 540
         super().__init__(canvas, Vecteur(x,y), self.largeur, self.hauteur, 0, "black", "black", 0)
 
-
     def getHauteur(self):
         return self.hauteur
 

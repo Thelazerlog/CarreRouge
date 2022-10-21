@@ -40,7 +40,7 @@ class JeuControleur :
         self.vue = JeuVue(root)
         self.bordureNoire = BordureNoire(0, 0, self.vue.canvas) 
         self.zoneBlanche = ZoneBlanche(75, 75, self.vue.canvas) 
-        self.carreRouge = CarreRouge(0, self.vue.canvas)
+        self.carreRouge = CarreRouge(self.vue.canvas)
         self.vecteurC = Vecteur(self.carreRouge.getX(), self.carreRouge.getY())
         self.nom = self.vue.demanderNom(root)
         self.vue.setNom(self.nom)
@@ -60,7 +60,7 @@ class JeuControleur :
     
 
     def __defineEvent(self) :
-        self.carreRouge.bind("<ButtonPress-1>", self.evenement())
+        self.carreRouge.setListen("<ButtonPress-1>", self.evenement)
 
     def evenement(self) :
         self.deplacementCarreRouge()
@@ -97,7 +97,7 @@ class JeuControleur :
     
     def ecrireScore(self) :
         score = self.minuteur()
-        self.fileData = [self.nomJoueur, self.niveau, self.difficulte, score]                           ###### Les classes Session et Partie sont supposé etre dans modele
+        self.fileData = [self.nomJoueur, self.niveau, self.difficulte, score]
         with open('FichierScores.csv', 'w') as csvFile :
             ecriture_score = csv.writer(csvFile, delimiter=',')
             ecriture_score.writerow(self.fileData)

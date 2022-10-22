@@ -10,7 +10,7 @@ from functools import partial
 class MenuControleur:
     def __init__(self, root, jeuControleur) :
         self.jeuControleur = jeuControleur
-        self.vue = MenuVue(root, self.nouvellePartie(),self.quitter())
+        self.vue = MenuVue(root, self.nouvellePartie(), self.lireScore() ,self.quitter())
         #nom = self.vue.demanderNom(root)
         #self.vue.setNom(nom)
 
@@ -22,13 +22,26 @@ class MenuControleur:
             root = self.jeuControleur.vue.root
             self.jeuControleur.vue.destroy()  
             self.jeuControleur = JeuControleur(root)
-        
         self.jeuControleur.debuter()
-        self.jeuControleur.nouvellePartie = self.nouvellePartie
+        #self.jeuControleur.nouvellePartie = self.nouvellePartie
 
     def quitter(self) :
        #self.jeuControleur.vue.destroy()
        test= 1
+
+    def lireScore(self) :
+        with open('FichierScores.csv', 'r') as csvFile :
+            lecteur_score = csv.reader(csvFile, delimiter=',')
+            self.dataList = [[]]
+            self.dataRead = []
+            cpt = 0
+
+            for row in lecteur_score :
+                self.dataRead.append(row)
+                cpt += 1
+                if cpt % 4 == 0 :
+                    self.dataList.append(self.dataRead)
+                    self.dataRead = []
 
 
 class JeuControleur :
@@ -98,19 +111,7 @@ class JeuControleur :
             ecriture_score = csv.writer(csvFile, delimiter=',')
             ecriture_score.writerow(self.fileData)
     
-    def lireScore(self) :
-        with open('FichierScores.csv', 'r') as csvFile :
-            lecteur_score = csv.reader(csvFile, delimiter=',')
-            self.dataList = [[]]
-            self.dataRead = []
-            cpt = 0
 
-            for row in lecteur_score :
-                self.dataRead.append(row)
-                cpt += 1
-                if cpt % 4 == 0 :
-                    self.dataList.append(self.dataRead)
-                    self.dataRead = []
     '''
     def trier(self) :                                       ###### pas sur du fonctionnement de cette fonction! demander a isi
         for i in range(0, len(self.dataList) - 1) :

@@ -61,19 +61,20 @@ class JeuControleur :
         self.rectangleBleu = []
         self.itemCollection = []
         for i in range(0, 4) :
-            self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))   # on place les rectangles bleus
+            self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))  
         self.__defineEvent()
         
     def demarrerPartie(self) :
         return self.partieDemarree
     
 
-    def __defineEvent(self) :
+    def __defineEvent(self) :    
         self.vue.setListen("<ButtonPress-1>", self.evenement)
 
-    def evenement(self) :
-        self.deplacementCarreRouge()
-        self.deplacementRectangleBleu()
+    def evenement(self, event) :
+        while event:
+            #self.deplacementCarreRouge()
+            self.deplacementRectangleBleu()
 
     def debuter(self) :
         self.partieDemarree = True
@@ -106,7 +107,7 @@ class JeuControleur :
     
     def ecrireScore(self) :
         score = self.minuteur()
-        self.fileData = [self.nomJoueur, self.niveau, self.difficulte, score]
+        self.fileData = [self.nom, self.difficulte, score]
         with open('FichierScores.csv', 'w') as csvFile :
             ecriture_score = csv.writer(csvFile, delimiter=',')
             ecriture_score.writerow(self.fileData)
@@ -127,7 +128,7 @@ class JeuControleur :
     def deplacementRectangleBleu(self) :
         for i in range(0, 4) :
             x = self.rectangleBleu[i].getOrigine().x
-            y = self.rectangleBleu[i].getY.getOrigine().y
+            y = self.rectangleBleu[i].getOrigine().y
             '''
             deplacement : 
                 axeDeplacement :
@@ -188,6 +189,7 @@ class JeuControleur :
             # AFFECTATIONS MODÈLES & VUE
             deplacement = Vecteur(x, y)
             self.rectangleBleu[i].translateTo(deplacement)
+        self.vue.draw(self.rectangleBleu)
                                                                              
                                             
     def deplacementCarreRouge(self) : 

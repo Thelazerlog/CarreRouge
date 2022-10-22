@@ -22,7 +22,7 @@ class CarreRouge(Carre):
         self.axeDeplacement = axe
         
     def getPosition(self):
-        return  super().get_origine().x + "x"  + super().get_origine().y
+        return  str(super().get_origine().x) + "x"  + str(super().get_origine().y)
 
     def translateTo(self, position: Vecteur) -> None:
         return super().translateTo(position)

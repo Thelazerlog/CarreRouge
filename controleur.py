@@ -41,18 +41,14 @@ class JeuControleur :
         self.bordureNoire = BordureNoire(0, 0, self.vue.canvas) 
         self.zoneBlanche = ZoneBlanche(75, 75, self.vue.canvas) 
         self.carreRouge = CarreRouge(self.vue.canvas)
-        self.vecteurC = Vecteur(self.carreRouge.getX(), self.carreRouge.getY())
         self.nom = self.vue.demanderNom(root)
         self.vue.setNom(self.nom)
         self.difficulte = self.vue.demanderDif(root)
         self.vue.setDif(self.difficulte)
-        
         self.rectangleBleu = []
+        self.itemCollection = []
         for i in range(0, 4) :
-            self.rectangleBleu.append(RectangleBleu(1,i+1,0, self.vue.canvas))   # on place les rectangles bleus
-            self.vecteurR = Vecteur(self.rectangleBleu[i].getX(), self.rectangleBleu[i].getY())
-            self.vue.addRectangle(self.vecteurR, self.rectangleBleu[i].getLargeur(), self.rectangleBleu[i].getHauteur(),0, "blue", "blue", 1)
-        self.vue.addCarre(self.vecteurC, self.carreRouge.getArrete(),0, "red", "red", 0)
+            self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))   # on place les rectangles bleus
         self.__defineEvent()
         
     def demarrerPartie(self) :
@@ -60,7 +56,7 @@ class JeuControleur :
     
 
     def __defineEvent(self) :
-        self.carreRouge.setListen("<ButtonPress-1>", self.evenement)
+        self.vue.setListen("<ButtonPress-1>", self.evenement)
 
     def evenement(self) :
         self.deplacementCarreRouge()
@@ -68,7 +64,7 @@ class JeuControleur :
 
     def debuter(self) :
         self.partieDemarree = True
-        self.vue.draw()
+        self.vue.draw(self.rectangleBleu)
         self.tempsDebut = time.time()
         
     
@@ -129,8 +125,8 @@ class JeuControleur :
     
     def deplacementRectangleBleu(self) :
         for i in range(0, 4) :
-            x = self.rectangleBleu[i].getX()
-            y = self.rectangleBleu[i].getY()
+            x = self.rectangleBleu[i].getOrigine().x
+            y = self.rectangleBleu[i].getY.getOrigine().y
             '''
             deplacement : 
                 axeDeplacement :
@@ -190,15 +186,11 @@ class JeuControleur :
 
             # AFFECTATIONS MODÈLES & VUE
             deplacement = Vecteur(x, y)
-            self.rectangleBleu[i].setPosition(x, y)
+            self.rectangleBleu[i].translateTo(deplacement)
                                                                              
                                             
     def deplacementCarreRouge(self) : 
         posX = self.vue.root.winfo_pointerx #recoit position du curseur             
         posY = self.vue.root.winfo_pointery
         deplacement = Vecteur(posX, posY) 
-        x = str(posX)  # transforme les int en string 
-        y = str(posY)
-        #newPosition = x + "x" + y # construit une string position
-        self.carreRouge.translate(deplacement) # TODO : pas sur de ce qui se passe ici
-        self.carreRouge.setPosition(posX, posY)
+        self.carreRouge.translateTo(deplacement)

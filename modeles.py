@@ -24,8 +24,11 @@ class CarreRouge(Carre):
     def getPosition(self):
         return  super().get_origine().x + "x"  + super().get_origine().y
 
-    def translateTo(self, position: Vecteur) -> None:
+    def modificationPos(self, position: Vecteur) -> None:
+        self.origine = position
         return super().translateTo(position)
+
+    
 
 class RectangleBleu(Rectangle):
     def __init__(self, vitesse, rectangleChiffre, canvas):

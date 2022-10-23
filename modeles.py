@@ -80,7 +80,8 @@ class RectangleBleu(Rectangle):
     def getPosition(self):
         return  super().get_origine().x + "x"  + super().get_origine().y
 
-    def translateTo(self, position: Vecteur) -> None:
+    def modificationPos(self, position: Vecteur) -> None:
+        self.origine = position
         return super().translateTo(position)
 
 
@@ -113,3 +114,22 @@ class ZoneBlanche(Rectangle):
     
     def getOrigine(self) -> Vecteur:
         return super().get_origine()
+
+class Session():
+    def __init__(self, nom, difficulte):
+        self.nomJoueur = nom
+        self.difficulte = difficulte
+        self.parties = []
+    def getInfoSession(self):
+        csv = ""
+        for i in range(0, len(self.parties)):
+            csv += self.nomJoueur + ", " + self.parties[i].getTemps + ", " + self.difficulte + "\\n"
+        return csv
+    def ajouterPartie(self, partie):
+        self.parties.append(partie)
+
+class Partie():
+    def __init__(self, temps):
+        self.temps = temps
+    def getTemps(self):
+        return self.temps

@@ -138,7 +138,6 @@ class JeuControleur :
                     3 = sud-ouest
                     4 = ... fonctionnalités futures
             '''
-            self.rectangleBleu[i].setAxe(random.randint(0, 3))
             
             # DÉTECTION DE COLLISIONS LATÉRALES 
             if x == 0 : #collision bordure gauche (axes de directions ouest deviennent de direction est)
@@ -174,17 +173,17 @@ class JeuControleur :
             
             # DÉPLACEMENT LOGIQUE
             if self.rectangleBleu[i].getAxe() == 0 :
-                    x -= 100
-                    y -= 100
+                    x -= 1
+                    y -= 1
             elif self.rectangleBleu[i].getAxe() == 1 :
-                    x += 100
-                    y -= 100
+                    x += 1
+                    y -= 1
             elif self.rectangleBleu[i].getAxe() == 2 :
-                    x += 100
-                    y += 100
+                    x += 1
+                    y += 1
             elif self.rectangleBleu[i].getAxe() == 3 :
-                    x -= 100
-                    y += 100
+                    x -= 1
+                    y += 1
 
             # AFFECTATIONS MODÈLES & VUE
             deplacement = Vecteur(x, y)

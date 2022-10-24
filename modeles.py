@@ -6,7 +6,7 @@ class CarreRouge(Carre):
     def __init__(self, canvas):
         self.axeDeplacement = random.randint(0, 3)
         self.arrete = 40
-        super().__init__(canvas, Vecteur(225, 225), self.arrete, self.axeDeplacement , "red", "red", 0)
+        super().__init__(canvas, Vecteur(225, 225), self.arrete, 0 , "red", "red", 0)
 
 
     def getOrigine(self) -> Vecteur:

@@ -72,14 +72,24 @@ class JeuControleur :
         self.vue.setListen("<ButtonPress-1>", self.evenement)
 
     def evenement(self, event) :
+        tempsDebut = time.time()
+        i = 0
         while event:
             #self.deplacementCarreRouge()
             self.deplacementRectangleBleu()
+            i += 1
+            if i == 10000:
+                break
+        tempsFin = time.time()
+        self.minuteur(tempsFin - tempsDebut)
+        temps = tempsFin - tempsDebut
+        #self.vue.setTimer(tempsFin - tempsDebut)
+        self.vue.setTimer("{:.2f}".format(temps))
 
     def debuter(self) :
         self.partieDemarree = True
         self.vue.draw(self.rectangleBleu)
-        self.tempsDebut = time.time()
+        #self.tempsDebut = time.time()
         
     
     def verifierCollision(self) :
@@ -96,14 +106,12 @@ class JeuControleur :
                 continue
         return False
     
-    def minuteur(self) :
-        sec = self.tempsFin - self.tempsDebut
+        def minuteur(self, sec) :
         mins = sec // 60
         sec = sec % 60
         hours = mins // 60
         mins = mins % 60
-        total = "{0}:{1}:{2}".format(int(hours),int(mins),sec)
-        return total
+        self.vue.setTimer("{0}:{1}:{2}".format(int(hours),int(mins),sec))
     
     def ecrireScore(self) :
         score = self.minuteur()

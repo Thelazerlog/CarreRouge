@@ -140,29 +140,29 @@ class JeuControleur :
             '''
             
             # DÉTECTION DE COLLISIONS LATÉRALES 
-            if x == 0 : #collision bordure gauche (axes de directions ouest deviennent de direction est)
+            if x >= 75 and x <= 85 : #collision bordure gauche (axes de directions ouest deviennent de direction est)
                 if self.rectangleBleu[i].getAxe() == 0 :
                     self.rectangleBleu[i].setAxe(1)
                 else : 
                     self.rectangleBleu[i].setAxe(2)
-            if x == 400 : #collision bordure droite (axes de directions est deviennent de direction ouest)
-                if self.rectangleBleu[i].getAxe() == 2 :
-                    self.rectangleBleu[i].setAxe(3)
+            if x >= 465 and x <= 490 : #collision bordure droite (axes de directions est deviennent de direction ouest)
+                if self.rectangleBleu[i].getAxe() == 1 :
+                    self.rectangleBleu[i].setAxe(0)
                 else :
-                    self.rectangleBleu[i].setAxe(1)
-            if y == 0 : #collision bordure haut (axes de directions nord deviennent de direction sud)
+                    self.rectangleBleu[i].setAxe(3)
+            if y >= 88 and y <= 96 : #collision bordure haut (axes de directions nord deviennent de direction sud)
                 if self.rectangleBleu[i].getAxe() == 1 :
                     self.rectangleBleu[i].setAxe(2)
                 else :
                     self.rectangleBleu[i].setAxe(3)
-            if y == 490 : #collision bordure bas (axes de directions sud deviennent de direction nord)
+            if y >= 465 and y <= 475 : #collision bordure bas (axes de directions sud deviennent de direction nord)
                 if self.rectangleBleu[i].getAxe() == 2 :
                     self.rectangleBleu[i].setAxe(1)
                 else :
                     self.rectangleBleu[i].setAxe(0)
             
             # DÉTECTION DE COLLISIONS DANS LES COINS 
-            if(self.rectangleBleu[i].getPosition() == "0x0") : #coin nord-ouest
+            if(self.rectangleBleu[i].getPosition() == "80x80") : #coin nord-ouest
                     self.rectangleBleu[i].setAxe(2)
             if(self.rectangleBleu[i].getPosition() == "400x0") : #coin nord-est
                     self.rectangleBleu[i].setAxe(3)       
@@ -173,21 +173,22 @@ class JeuControleur :
             
             # DÉPLACEMENT LOGIQUE
             if self.rectangleBleu[i].getAxe() == 0 :
-                    x -= 1
-                    y -= 1
+                    x -= 0.2
+                    y -= 0.2
             elif self.rectangleBleu[i].getAxe() == 1 :
-                    x += 1
-                    y -= 1
+                    x += 0.2
+                    y -= 0.2
             elif self.rectangleBleu[i].getAxe() == 2 :
-                    x += 1
-                    y += 1
+                    x += 0.2
+                    y += 0.2
             elif self.rectangleBleu[i].getAxe() == 3 :
-                    x -= 1
-                    y += 1
+                    x -= 0.2
+                    y += 0.2
 
             # AFFECTATIONS MODÈLES & VUE
             deplacement = Vecteur(x, y)
             self.rectangleBleu[i].translateTo(deplacement)
+            self.rectangleBleu[i].modificationPos(deplacement)
         self.vue.draw(self.rectangleBleu)
                                                                              
                                             

@@ -9,7 +9,7 @@ from functools import partial
 class MenuControleur:
     def __init__(self, root, jeuControleur) :
         self.jeuControleur = jeuControleur
-        self.vue = MenuVue(root, self.nouvellePartie(), self.lireScore() ,self.quitter())
+        self.vue = MenuVue(root, self.nouvellePartie, self.lireScore ,self.quitter)
         #nom = self.vue.demanderNom(root)
         #self.vue.setNom(nom)
 
@@ -22,11 +22,9 @@ class MenuControleur:
             self.jeuControleur.vue.destroy()  
             self.jeuControleur = JeuControleur(root)
         self.jeuControleur.debuter()
-        #self.jeuControleur.nouvellePartie = self.nouvellePartie
 
     def quitter(self) :
-       #self.jeuControleur.vue.destroy()
-       test= 1
+       self.jeuControleur.vue.destroy()
 
     def lireScore(self) :
         with open('FichierScores.csv', 'r') as csvFile :

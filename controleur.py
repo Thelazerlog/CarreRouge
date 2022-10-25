@@ -75,11 +75,12 @@ class JeuControleur :
             #self.deplacementCarreRouge()
             self.deplacementRectangleBleu()
             i += 1
-            if i == 10000:
+            if i == 15000:
                 break
         tempsFin = time.time()
         self.minuteur(tempsFin - tempsDebut)
         temps = tempsFin - tempsDebut
+        self.ecrireScore("{:.2f}".format(temps))
         self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
 
     def debuter(self) :
@@ -110,8 +111,7 @@ class JeuControleur :
         mins = mins % 60
         self.vue.setTimer("{0}:{1}:{2}".format(int(hours),int(mins),sec))
     
-    def ecrireScore(self) :
-        score = self.minuteur()
+    def ecrireScore(self, score) :
         self.fileData = [self.nom, self.difficulte, score]
         with open('FichierScores.csv', 'w') as csvFile :
             ecriture_score = csv.writer(csvFile, delimiter=',')

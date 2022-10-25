@@ -42,6 +42,9 @@ class JeuVue:
     def draw(self,rectangle) : # dessine les carre ( carre et rectangle)
         for rectangle in rectangle :
             rectangle.draw()
+        
+    def drawCarre(self,carre) :
+        carre.draw()
 
     def setListen(self, eventName, command) : # prend en paramètre le nom de l'event et la commande qui lui est asocier par exemple self.vue.setListen("<ButtonPress-1>", self.setPlayerPosition)
         self.root.bind(eventName, command)

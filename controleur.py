@@ -1,4 +1,3 @@
-from cmath import rect
 from vue import JeuVue, MenuVue
 from modeles import BordureNoire, ZoneBlanche, CarreRouge, RectangleBleu
 import csv
@@ -45,15 +44,13 @@ class MenuControleur:
 
 
 class JeuControleur :
-    tempsDebut = 0
-    tempsFin = 0
     def __init__(self, root) :
         self.partieDemarree = False
         self.nouvellePartie = lambda : print("Nouvelle partie")    
         self.vue = JeuVue(root)
+        self.carreRouge = CarreRouge(self.vue.canvas)
         self.bordureNoire = BordureNoire(0, 0, self.vue.canvas) 
         self.zoneBlanche = ZoneBlanche(75, 75, self.vue.canvas) 
-        self.carreRouge = CarreRouge(self.vue.canvas)
         self.nom = self.vue.demanderNom(root)
         self.vue.setNom(self.nom)
         self.difficulte = self.vue.demanderDif(root)
@@ -61,7 +58,7 @@ class JeuControleur :
         self.rectangleBleu = []
         self.itemCollection = []
         for i in range(0, 4) :
-            self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))  
+            self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))
         self.__defineEvent()
         
     def demarrerPartie(self) :
@@ -83,12 +80,12 @@ class JeuControleur :
         tempsFin = time.time()
         self.minuteur(tempsFin - tempsDebut)
         temps = tempsFin - tempsDebut
-        #self.vue.setTimer(tempsFin - tempsDebut)
-        self.vue.setTimer("{:.2f}".format(temps))
+        self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
 
     def debuter(self) :
         self.partieDemarree = True
         self.vue.draw(self.rectangleBleu)
+        self.vue.drawCarre(self.carreRouge)
         #self.tempsDebut = time.time()
         
     
@@ -106,7 +103,7 @@ class JeuControleur :
                 continue
         return False
     
-        def minuteur(self, sec) :
+    def minuteur(self, sec) :
         mins = sec // 60
         sec = sec % 60
         hours = mins // 60
@@ -169,7 +166,8 @@ class JeuControleur :
                 else :
                     self.rectangleBleu[i].setAxe(0)
             
-            # DÉTECTION DE COLLISIONS DANS LES COINS 
+            # DÉTECTION DE COLLISIONS DANS LES COINS
+            """" 
             if(self.rectangleBleu[i].getPosition() == "80x80") : #coin nord-ouest
                     self.rectangleBleu[i].setAxe(2)
             if(self.rectangleBleu[i].getPosition() == "400x0") : #coin nord-est
@@ -178,7 +176,7 @@ class JeuControleur :
                     self.rectangleBleu[i].setAxe(0)
             if(self.rectangleBleu[i].getPosition() == "0x490") : #coin sud-ouest
                     self.rectangleBleu[i].setAxe(1)
-            
+            """
             # DÉPLACEMENT LOGIQUE
             if self.rectangleBleu[i].getAxe() == 0 :
                     x -= 0.2

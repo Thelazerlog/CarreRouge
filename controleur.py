@@ -57,21 +57,25 @@ class JeuControleur :
         self.itemCollection = []
         for i in range(0, 4) :
             self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))
+        self.debuter()
         self.__defineEvent()
         
     def demarrerPartie(self) :
         return self.partieDemarree
     
 
-    def __defineEvent(self) :    
+    def __defineEvent(self) :
         self.vue.setListen("<ButtonPress-1>", self.evenement)
 
     def evenement(self, event) :
+        self.vue.setListen("<Motion>", self.evenement)
         tempsDebut = time.time()
         i = 0
-        while event:
-            #self.deplacementCarreRouge()
+        while self.verifierCollision() == False :
+            x = event.x
+            y = event.y
             self.deplacementRectangleBleu()
+            self.deplacementCarreRouge(x, y)
             i += 1
             if i == 15000:
                 break
@@ -85,21 +89,23 @@ class JeuControleur :
         self.partieDemarree = True
         self.vue.draw(self.rectangleBleu)
         self.vue.drawCarre(self.carreRouge)
-        #self.tempsDebut = time.time()
-        
+
     
     def verifierCollision(self) :
         # On recupere la position du carré rouge
-        carreRougePosition = self.carreRouge.getPosition()
+        carreX = self.carreRouge.get_origine().x
+        carreY = self.carreRouge.get_origine().y
         # On recupere les positions des rectangles blues
         for i in range(0, 4) :
-            rectangleBleuPosition = self.rectangleBleu[i].getPosition()
-            if carreRougePosition == rectangleBleuPosition :
-                self.vue.messageBox("Vous avez survécu : " + self.minuteur() + " secondes!")
-                self.tempsFin = time.time()
-                return True
-            else :
-                continue
+            rectangleX = self.rectangleBleu[i].getOrigine().x
+            rectangleY = self.rectangleBleu[i].getOrigine().y
+            for j in range(0, 10) :
+                rectangleX += j
+                rectangleY += j
+                if (carreX == rectangleX or carreX == rectangleX) or (carreY == rectangleY or carreY == rectangleY) :
+                    return True
+                else :
+                    continue
         return False
     
     def minuteur(self, sec) :
@@ -111,7 +117,7 @@ class JeuControleur :
     
     def ecrireScore(self, score) :
         self.fileData = [self.nom, self.difficulte, score]
-        with open('FichierScores.csv', 'w') as csvFile :
+        with open('FichierScores.csv', 'a') as csvFile :
             ecriture_score = csv.writer(csvFile, delimiter=',')
             ecriture_score.writerow(self.fileData)
     
@@ -163,18 +169,7 @@ class JeuControleur :
                     self.rectangleBleu[i].setAxe(1)
                 else :
                     self.rectangleBleu[i].setAxe(0)
-            
-            # DÉTECTION DE COLLISIONS DANS LES COINS
-            """" 
-            if(self.rectangleBleu[i].getPosition() == "80x80") : #coin nord-ouest
-                    self.rectangleBleu[i].setAxe(2)
-            if(self.rectangleBleu[i].getPosition() == "400x0") : #coin nord-est
-                    self.rectangleBleu[i].setAxe(3)       
-            if(self.rectangleBleu[i].getPosition() == "400x490") : #coin sud-est
-                    self.rectangleBleu[i].setAxe(0)
-            if(self.rectangleBleu[i].getPosition() == "0x490") : #coin sud-ouest
-                    self.rectangleBleu[i].setAxe(1)
-            """
+
             # DÉPLACEMENT LOGIQUE
             if self.rectangleBleu[i].getAxe() == 0 :
                     x -= 0.2
@@ -196,8 +191,8 @@ class JeuControleur :
         self.vue.draw(self.rectangleBleu)
                                                                              
                                             
-    def deplacementCarreRouge(self) : 
-        posX = self.vue.root.winfo_pointerx #recoit position du curseur             
-        posY = self.vue.root.winfo_pointery
-        deplacement = Vecteur(posX, posY) 
+    def deplacementCarreRouge(self, x, y) : 
+        deplacement = Vecteur(x, y) 
         self.carreRouge.translateTo(deplacement)
+        self.carreRouge.modificationPos(deplacement)
+        self.vue.drawCarre(self.carreRouge)

@@ -70,15 +70,11 @@ class JeuControleur :
     def evenement(self, event) :
         self.vue.setListen("<Motion>", self.evenement)
         tempsDebut = time.time()
-        i = 0
-        while self.verifierCollision() == False :
-            x = event.x
-            y = event.y
-            self.deplacementRectangleBleu()
-            self.deplacementCarreRouge(x, y)
-            i += 1
-            if i == 15000:
-                break
+        
+        x = event.x
+        y = event.y
+        self.deplacementRectangleBleu()
+        self.deplacementCarreRouge(x, y)
         tempsFin = time.time()
         self.minuteur(tempsFin - tempsDebut)
         temps = tempsFin - tempsDebut

@@ -95,18 +95,28 @@ class JeuControleur :
         # On recupere la position du carré rouge
         carreX = self.carreRouge.get_origine().x
         carreY = self.carreRouge.get_origine().y
-        # On recupere les positions des rectangles blues
-        for i in range(0, 4) :
-            rectangleX = self.rectangleBleu[i].getOrigine().x
-            rectangleY = self.rectangleBleu[i].getOrigine().y
-            for j in range(0, 10) :
-                rectangleX += j
-                rectangleY += j
-                if (carreX == rectangleX or carreX == rectangleX) or (carreY == rectangleY or carreY == rectangleY) :
-                    return True
-                else :
-                    continue
-        return False
+
+        # Détéction de collision avec la bordure noire
+        if carreX >= 75 and carreX <= 85 :
+            return True
+        elif carreX >= 465 and carreX <= 490 :
+            return True
+        elif carreY >= 88 and carreY <= 96 : 
+            return True
+        elif carreY >= 465 and carreY <= 475 :
+            return True
+        else :
+            for i in range(0, 4) :
+                rectangleX = self.rectangleBleu[i].getOrigine().x
+                rectangleY = self.rectangleBleu[i].getOrigine().y
+                for j in range(0, 10) :
+                    rectangleX += j
+                    rectangleY += j
+                    if (carreX == rectangleX or carreX == rectangleX) or (carreY == rectangleY or carreY == rectangleY) :
+                        return True
+                    else :
+                        continue
+            return False
     
     def minuteur(self, sec) :
         mins = sec // 60

@@ -37,24 +37,24 @@ class RectangleBleu(Rectangle):
         if rectangleChiffre == 1: #Rectangle superieur gauche
             self.largeur = 60
             self.hauteur = 60
-            super().__init__(canvas, Vecteur(100,100),self.largeur ,self.hauteur, self.axeDeplacement, "blue", "blue", 1)
+            super().__init__(canvas, Vecteur(100,100),self.largeur ,self.hauteur, 0, "blue", "blue", 1)
 
         elif rectangleChiffre == 2:  #Rectangle superieur droit
             self.largeur = 60
             self.hauteur = 50
-            super().__init__(canvas, Vecteur(300,85),self.largeur ,self.hauteur, self.axeDeplacement, "blue", "blue", 1)
+            super().__init__(canvas, Vecteur(300,85),self.largeur ,self.hauteur, 0, "blue", "blue", 1)
 
 
         elif rectangleChiffre == 3: #Rectangle inferieur gauche
             self.largeur = 30
             self.hauteur = 60
-            super().__init__(canvas, Vecteur(85,300),self.largeur ,self.hauteur, self.axeDeplacement, "blue", "blue", 1)
+            super().__init__(canvas, Vecteur(85,300),self.largeur ,self.hauteur, 0, "blue", "blue", 1)
 
 
         elif rectangleChiffre == 4: #Rectangle inferieur droit
             self.largeur = 100
             self.hauteur = 20
-            super().__init__(canvas, Vecteur(355,340),self.largeur ,self.hauteur, self.axeDeplacement, "blue", "blue", 1)       
+            super().__init__(canvas, Vecteur(355,340),self.largeur ,self.hauteur, 0, "blue", "blue", 1)       
  
     def getAxe(self):
         return self.axeDeplacement
@@ -123,7 +123,7 @@ class Session():
     def getInfoSession(self):
         csv = ""
         for i in range(0, len(self.parties)):
-            csv += self.nomJoueur + ", " + self.parties[i].getTemps + ", " + self.difficulte + "\\n"
+            csv += str(self.nomJoueur) + ", " + str(self.parties[i].getTemps) + ", " + str(self.difficulte) + "\\n"
         return csv
     def ajouterPartie(self, partie):
         self.parties.append(partie)

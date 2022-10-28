@@ -69,8 +69,6 @@ class JeuVue:
         """
         for rectangle in rectangle :
             rectangle.draw()
-<<<<<<< Updated upstream
-=======
         
     def drawCarre(self,carre) :
         """ dessine le carré rouge
@@ -79,7 +77,6 @@ class JeuVue:
             carre (CarreRouge) :  objet de type Carre a dessiner
         """
         carre.draw()
->>>>>>> Stashed changes
 
     def setListen(self, eventName, command) :
         """ Ecoute les evenement qui ce déroule sur sur le canvas et bind une commande sur un evenement 

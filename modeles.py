@@ -301,7 +301,7 @@ class Session():
         with open('FichierScores.csv', 'a') as csvFile :
             ecriture_score = csv.writer(csvFile, delimiter=',')
             for i in range(0, len(self.parties)):
-                ecriture_score.writerow(str(self.nomJoueur) + ", " + str(self.parties[i].getTemps) + ", " + str(self.difficulte))       
+                ecriture_score.writerow(self.nomJoueur + ", " + str(self.parties[i].getTemps) + ", " + self.difficulte)       
 
     def ajouterPartie(self, partie):
         """Permet d'ajouter une partie completée à la session

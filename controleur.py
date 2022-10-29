@@ -64,11 +64,11 @@ class JeuControleur:
         self.vue.setListen("<Motion>", self.evenement)
         self.roulerJeu(event.x, event.y)
         if self.verifierCollision():
-            tempsFin = time.time()
-            self.minuteur(tempsFin - self.partie.getTemps())
-            temps = tempsFin - self.partie.getTemps()
+            #tempsFin = time.time()
+            #self.minuteur(tempsFin - self.partie.getTemps())
+            #temps = tempsFin - self.partie.getTemps()
             self.session.sauverScore()
-            self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
+            #self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
 
     def debuter(self) :
         self.partieDemarree = True
@@ -108,14 +108,14 @@ class JeuControleur:
                         continue
             return False
     
-    def minuteur(self, sec):
+    #def minuteur(self, sec):
         mins = sec // 60
         sec = sec % 60
         hours = mins // 60
         mins = mins % 60
         self.vue.setTimer("{0}:{1}:{2}".format(int(hours), int(mins), sec))
     
-    def ecrireScore(self, score):
+    #def ecrireScore(self, score):
         self.fileData = [self.nom, self.difficulte, score]
         with open('FichierScores.csv', 'a') as csvFile :
             ecriture_score = csv.writer(csvFile, delimiter=',')

@@ -19,6 +19,7 @@ class MenuVue:
         """
         self.menuFrame= tk.Frame (root, width=300, height=450, highlightbackground="blue", highlightthickness=3)
         self.root = root
+        self.score = tk.Label(root, text="")         
         self.btn_nouvellePartie = tk.Button(root, text='Nouvelle Session',
                                             command=fctLancerPartie)
         self.btn_quitApp = tk.Button(root, text='Quitter',
@@ -34,7 +35,13 @@ class MenuVue:
         self.btn_quitApp.pack() 
         self.menuFrame.pack(side=tk.LEFT)
 
-    
+    def setScore(self,score):
+        """ change le champ score
+
+            Args: score(String): la liste des score du fichier csv
+        """
+        self.score.config(text= "Meilleur score : /n" + score )
+
 
 class JeuVue:
     """ cette classe permet de définir l'aparence de l'espace de jeu

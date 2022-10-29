@@ -9,7 +9,7 @@ class MenuControleur:
         self.jeuControleur = jeuControleur
         self.vue = MenuVue(root, self.nouvellePartie, self.lireScore, self.quitter)
 
-    def debuter(self) :
+    def debuter(self):
         self.vue.draw()                        
     
     def nouvellePartie(self):
@@ -35,8 +35,8 @@ class MenuControleur:
                     self.dataList.append(self.dataRead)
                     self.dataRead = []
 
-class JeuControleur :
-    def __init__(self, root) :
+class JeuControleur:
+    def __init__(self, root):
         self.partieDemarree = False
         self.nouvellePartie = lambda : print("Nouvelle partie")    
         self.vue = JeuVue(root)
@@ -95,27 +95,27 @@ class JeuControleur :
             return True
         elif carreY >= 465 and carreY <= 475:
             return True
-        else :
-            for i in range(0, 4) :
+        else:
+            for i in range(0, 4):
                 rectangleX = self.rectangleBleu[i].getOrigine().x
                 rectangleY = self.rectangleBleu[i].getOrigine().y
-                for j in range(0, 10) :
+                for j in range(0, 10):
                     rectangleX += j
                     rectangleY += j
                     if (carreX == rectangleX or carreX == rectangleX) or (carreY == rectangleY or carreY == rectangleY) :
                         return True
-                    else :
+                    else:
                         continue
             return False
     
-    def minuteur(self, sec) :
+    def minuteur(self, sec):
         mins = sec // 60
         sec = sec % 60
         hours = mins // 60
         mins = mins % 60
-        self.vue.setTimer("{0}:{1}:{2}".format(int(hours),int(mins),sec))
+        self.vue.setTimer("{0}:{1}:{2}".format(int(hours), int(mins), sec))
     
-    def ecrireScore(self, score) :
+    def ecrireScore(self, score):
         self.fileData = [self.nom, self.difficulte, score]
         with open('FichierScores.csv', 'a') as csvFile :
             ecriture_score = csv.writer(csvFile, delimiter=',')
@@ -176,10 +176,10 @@ class JeuControleur :
             elif self.rectangleBleu[i].getAxe() == 1:
                 x += 0.2
                 y -= 0.2
-            elif self.rectangleBleu[i].getAxe() == 2 :
+            elif self.rectangleBleu[i].getAxe() == 2:
                 x += 0.2
                 y += 0.2
-            elif self.rectangleBleu[i].getAxe() == 3 :
+            elif self.rectangleBleu[i].getAxe() == 3:
                 x -= 0.2
                 y += 0.2
 
@@ -189,7 +189,7 @@ class JeuControleur :
             self.rectangleBleu[i].modificationPos(deplacement)
         self.vue.draw(self.rectangleBleu)
                                             
-    def deplacementCarreRouge(self, x, y) : 
+    def deplacementCarreRouge(self, x, y):
         deplacement = Vecteur(x, y) 
         self.carreRouge.translateTo(deplacement)
         self.carreRouge.modificationPos(deplacement)

@@ -1,6 +1,8 @@
 # -*- coding: utf8 -*-
 import random
+import time
 from c31Geometry2 import *
+import csv
 
 class CarreRouge(Carre):
     def __init__(self, canvas):
@@ -120,16 +122,20 @@ class Session():
         self.nomJoueur = nom
         self.difficulte = difficulte
         self.parties = []
-    def getInfoSession(self):
-        csv = ""
-        for i in range(0, len(self.parties)):
-            csv += str(self.nomJoueur) + ", " + str(self.parties[i].getTemps) + ", " + str(self.difficulte) + "\\n"
-        return csv
+    def sauverScore(self):
+        with open('FichierScores.csv', 'a') as csvFile :
+            ecriture_score = csv.writer(csvFile, delimiter=',')
+            for i in range(0, len(self.parties)):
+                ecriture_score.writerow(str(self.nomJoueur) + ", " + str(self.parties[i].getTemps) + ", " + str(self.difficulte))       
     def ajouterPartie(self, partie):
         self.parties.append(partie)
+    def getNom(self):
+        return self.nomJoueur
+    def getDif(self):
+        return self.difficulte 
 
 class Partie():
-    def __init__(self, temps):
-        self.temps = temps
+    def __init__(self):
+        self.tempsDebut = time.time()
     def getTemps(self):
-        return self.temps
+        return round((time.time() - self.tempsDebut), 2)

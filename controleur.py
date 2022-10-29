@@ -1,5 +1,5 @@
 from vue import JeuVue, MenuVue
-from modeles import BordureNoire, ZoneBlanche, CarreRouge, RectangleBleu
+from modeles import BordureNoire, Partie, Session, ZoneBlanche, CarreRouge, RectangleBleu
 import csv
 import time
 from c31Geometry2 import *
@@ -43,10 +43,10 @@ class JeuControleur:
         self.carreRouge = CarreRouge(self.vue.canvas)
         self.bordureNoire = BordureNoire(0, 0, self.vue.canvas) 
         self.zoneBlanche = ZoneBlanche(75, 75, self.vue.canvas) 
-        self.nom = self.vue.demanderNom(root)
-        self.vue.setNom(self.nom)
-        self.difficulte = self.vue.demanderDif(root)
-        self.vue.setDif(self.difficulte)
+        self.partie = Partie()
+        self.session = Session(self.vue.demanderNom(root), self.vue.demanderDif(root))
+        self.vue.setNom(self.session.getNom())
+        self.vue.setDif(self.session.getDif())
         self.rectangleBleu = []
         self.itemCollection = []
         for i in range(0, 4):
@@ -61,14 +61,13 @@ class JeuControleur:
         self.vue.setListen("<ButtonPress-1>", self.evenement)
 
     def evenement(self, event):
-        tempsDebut = time.time()
         self.vue.setListen("<Motion>", self.evenement)
         self.roulerJeu(event.x, event.y)
         if self.verifierCollision():
             tempsFin = time.time()
-            self.minuteur(tempsFin - tempsDebut)
-            temps = tempsFin - tempsDebut
-            self.ecrireScore("{:.2f}".format(temps))
+            self.minuteur(tempsFin - self.partie.getTemps())
+            temps = tempsFin - self.partie.getTemps()
+            self.session.sauverScore()
             self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
 
     def debuter(self) :
@@ -79,6 +78,7 @@ class JeuControleur:
     def roulerJeu(self, x, y):
         self.deplacementRectangleBleu()
         self.deplacementCarreRouge(x, y)
+        self.vue.setTimer(self.partie.getTemps())
         self.verifierCollision()
 
     def verifierCollision(self) :

@@ -19,6 +19,5 @@ if __name__ == "__main__" :
     jeu = JeuControleur(root)
     menu = MenuControleur(root,jeu)
     menu.debuter()
-    
-    
+
     root.mainloop()

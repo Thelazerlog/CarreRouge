@@ -49,38 +49,77 @@ class JeuControleur :
         self.vue.setDif(self.difficulte)
         self.rectangleBleu = []
         self.itemCollection = []
+        self.isMoving = False
+        self.isPressed = False
         for i in range(0, 4):
             self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))
-        self.debuter()
         self.__defineEvent()
+        
+        
         
     def demarrerPartie(self):
         return self.partieDemarree
 
     def __defineEvent(self):
-        self.vue.setListen("<ButtonPress-1>", self.evenement)
+        self.vue.setListen("<B1-Motion>", self.buttonPressed)
+        self.vue.setListen("<ButtonRelease-1>", self.buttonReleased)
 
-    def evenement(self, event):
-        tempsDebut = time.time()
-        self.vue.setListen("<Motion>", self.evenement)
-        self.roulerJeu(event.x, event.y)
-        if self.verifierCollision():
-            tempsFin = time.time()
-            self.minuteur(tempsFin - tempsDebut)
-            temps = tempsFin - tempsDebut
-            self.ecrireScore("{:.2f}".format(temps))
-            self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
+    def buttonPressed(self, event) : 
+        self.isPressed = True
+        self.x = event.x
+        self.y = event.y
+        self.debuter()
+
+    def buttonReleased(self) :
+        self.isPressed = False
+
+
+    def evenement(self):
+        self.isMoving = True
+        self.tempsDebut = time.time()
+        self.roulerJeu()
 
     def debuter(self) :
         self.partieDemarree = True
         self.vue.draw(self.rectangleBleu)
         self.vue.drawCarre(self.carreRouge)
+        self.e = LoopEvent(self.vue.root, self.roulerJeu, 50)
+        self.e.start()
 
-    def roulerJeu(self, x, y):
+    def roulerJeu(self) :
         self.deplacementRectangleBleu()
-        self.deplacementCarreRouge(x, y)
-        self.verifierCollision()
+        if(self.isPressed) :
+            self.deplacementCarreRouge(self.x, self.y)
+        
 
+
+
+
+
+    # def arretCarreRouge(self, event) :
+    #     self.deplacementCarreRouge(event.x, event.y)
+    #     self.isMoving = False
+
+    
+
+    # def roulerJeu(self, x, y):
+    #     self.deplacementRectangleBleu()
+    #     while (not self.verifierCollision()) :
+    #         if(self.isMoving) :
+    #             self.deplacementCarreRouge(x, y)
+    #             self.verifierCollision()
+
+
+
+    # if self.verifierCollision():
+    #     tempsFin = time.time()
+    #     self.minuteur(tempsFin - self.tempsDebut)
+    #     temps = tempsFin - self.tempsDebut
+    #     self.ecrireScore("{:.2f}".format(temps))
+    #     self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
+    
+            
+            
     def verifierCollision(self) :
         # On recupere la position du carré rouge
         carreX = self.carreRouge.get_origine().x
@@ -171,17 +210,17 @@ class JeuControleur :
 
             # DÉPLACEMENT LOGIQUE
             if self.rectangleBleu[i].getAxe() == 0:
-                x -= 0.2
-                y -= 0.2
+                x -= 1
+                y -= 1
             elif self.rectangleBleu[i].getAxe() == 1:
-                x += 0.2
-                y -= 0.2
+                x += 1
+                y -= 1
             elif self.rectangleBleu[i].getAxe() == 2 :
-                x += 0.2
-                y += 0.2
+                x += 1
+                y += 1
             elif self.rectangleBleu[i].getAxe() == 3 :
-                x -= 0.2
-                y += 0.2
+                x -= 1
+                y += 1
 
             # AFFECTATIONS MODÈLES & VUE
             deplacement = Vecteur(x, y)

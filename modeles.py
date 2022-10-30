@@ -350,9 +350,19 @@ class Partie():
         return round((time.time() - self.tempsDebut), 2)
 
 class CanvasJeu():
+    """ cette classe permet de définir le canevas du jeu
+
+        Attributes:
+            canevas(tk.Canvas): l'aire de jeu
+    """
     def __init__(self, root):
+        """Permet de definir l'aire de jeu
+
+            Initialise canevas
+
+            Args: 
+                root(tk.Widget): Widget parent
+        """
         self.canvas = tk.Canvas(root, width=450, height=450,highlightbackground="black", highlightthickness=50, bg="white")
         self.canvas.pack(side=tk.RIGHT) # place l'espace de jeu
-    def setCanvas(self):
-        self.canvas
 

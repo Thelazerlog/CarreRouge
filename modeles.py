@@ -3,6 +3,7 @@ import random
 import time
 from c31Geometry2 import *
 import csv
+import tkinter as tk
 
 class CarreRouge(Carre):
     """Cette classe représente le carré rouge (Hérite de Carre de c31Geometry2) 
@@ -347,3 +348,11 @@ class Partie():
             double: temps passé depuis début de la partie
         """
         return round((time.time() - self.tempsDebut), 2)
+
+class CanvasJeu():
+    def __init__(self, root):
+        self.canvas = tk.Canvas(root, width=450, height=450,highlightbackground="black", highlightthickness=50, bg="white")
+        self.canvas.pack(side=tk.RIGHT) # place l'espace de jeu
+    def setCanvas(self):
+        self.canvas
+

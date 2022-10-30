@@ -55,17 +55,14 @@ class JeuVue:
         self.timer = tk.Label(root, text= "0.00") # a incrémenter 
         self.difficulter = tk.Label(root, text="") # a aller chercher au debut de la partie
         self.nom = tk.Label(root, text="") # a aller chercher au debut de la partie 
-        self.canvas = tk.Canvas(root, width=450, height=450,
-                highlightbackground="black", highlightthickness=50, bg="white")
         self.timer.pack(ipadx=10, ipady=10, anchor=tk.NE) # place le timer
         self.difficulter.pack(ipadx=10, ipady=10, anchor=tk.SW) # place la dificulter
         self.nom.pack(ipadx=10, ipady=10, anchor=tk.SW) # place le nom du joueur 
-        self.canvas.pack(side=tk.RIGHT) # place l'espace de jeu
 
-    def destroy(self):
+    def destroy(self, canvas):
         """ ferme l'espace de jeu
         """
-        self.canvas.destroy()
+        canvas.destroy()
 
        
     def draw(self,rectangle) : 

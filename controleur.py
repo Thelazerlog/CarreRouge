@@ -1,5 +1,5 @@
 from vue import JeuVue, MenuVue
-from modeles import BordureNoire, Partie, Session, ZoneBlanche, CarreRouge, RectangleBleu
+from modeles import BordureNoire, CanvasJeu, Partie, Session, ZoneBlanche, CarreRouge, RectangleBleu
 import csv
 import time
 from c31Geometry2 import *
@@ -40,9 +40,10 @@ class JeuControleur:
         self.partieDemarree = False
         self.nouvellePartie = lambda : print("Nouvelle partie")    
         self.vue = JeuVue(root)
-        self.carreRouge = CarreRouge(self.vue.canvas)
-        self.bordureNoire = BordureNoire(0, 0, self.vue.canvas) 
-        self.zoneBlanche = ZoneBlanche(75, 75, self.vue.canvas) 
+        self.canvasJeu = CanvasJeu(root)
+        self.carreRouge = CarreRouge(self.canvasJeu.canvas)
+        self.bordureNoire = BordureNoire(0, 0, self.canvasJeu.canvas) 
+        self.zoneBlanche = ZoneBlanche(75, 75, self.canvasJeu.canvas) 
         self.partie = Partie()
         self.session = Session(self.vue.demanderNom(root), self.vue.demanderDif(root))
         self.vue.setNom(self.session.getNom())
@@ -50,7 +51,7 @@ class JeuControleur:
         self.rectangleBleu = []
         self.itemCollection = []
         for i in range(0, 4):
-            self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))
+            self.rectangleBleu.append(RectangleBleu(1,i+1, self.canvasJeu.canvas))
         self.debuter()
         self.__defineEvent()
         

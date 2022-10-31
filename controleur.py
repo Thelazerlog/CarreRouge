@@ -53,12 +53,11 @@ class JeuControleur:
         self.isMoving = False
         self.isPressed = False
         self.vitesse = 1
-        self.carreRouge.vertices = []
         for i in range(0, 4):
             self.rectangleBleu.append(RectangleBleu(1,i+1, self.canvasJeu.canvas))
+        self.vue.draw(self.rectangleBleu)
+        self.vue.drawCarre(self.carreRouge)
         self.__defineEvent()
-        
-        
         
     def demarrerPartie(self):
         return self.partieDemarree
@@ -73,7 +72,7 @@ class JeuControleur:
         self.y = event.y
         if not self.partieDemarree :
             self.debuter()
-
+            
     def buttonReleased(self) :
         self.isPressed = False
 
@@ -85,45 +84,14 @@ class JeuControleur:
         
     def debuter(self) :
         self.partieDemarree = True
-        self.vue.draw(self.rectangleBleu)
-        self.vue.drawCarre(self.carreRouge)
         self.e = LoopEvent(self.vue.root, self.roulerJeu, 10)
         self.e.start()
 
     def roulerJeu(self) :
+        self.vue.setTimer(self.partie.getTemps())
         self.deplacementRectangleBleu()
         if(self.isPressed) :
             self.deplacementCarreRouge(self.x, self.y)
-        
-
-
-
-
-
-    # def arretCarreRouge(self, event) :
-    #     self.deplacementCarreRouge(event.x, event.y)
-    #     self.isMoving = False
-
-    
-
-
-    # def roulerJeu(self, x, y):
-    #     self.deplacementRectangleBleu()
-    #     while (not self.verifierCollision()) :
-    #         if(self.isMoving) :
-    #             self.deplacementCarreRouge(x, y)
-    #             self.verifierCollision()
-
-
-
-    # if self.verifierCollision():
-    #     tempsFin = time.time()
-    #     self.minuteur(tempsFin - self.tempsDebut)
-    #     temps = tempsFin - self.tempsDebut
-    #     self.ecrireScore("{:.2f}".format(temps))
-    #     self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
-    
-            
             
     def verifierCollision(self) :
         # On recupere la position du carré rouge
@@ -179,24 +147,16 @@ class JeuControleur:
             self.carreRouge.vertices[i] = Vecteur(x,y)
 
         #Vérification si 1 vertex du carré rouge est à l'intérieur de chaque rectangle bleu
-        for i in range(0, 4) :
-            if self.carreRouge.vertice[i].y <= self.rectangleBleu[i].edge[1] and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].edge[1] and self.carreRouge[i].vertice[i].x <= self.rectangleBleu[i].edge[2] and self.carreRouge[i].vertice[i].x >= self.rectangleBleu[i].edge[3] :
-                return True
+        for i in range (0, 4) : #rectangles
+            for i in range(0, 4) : #vertices
+                if self.carreRouge.vertice[i].y <= self.rectangleBleu[i].edge[1] and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].edge[1] and self.carreRouge[i].vertice[i].x <= self.rectangleBleu[i].edge[2] and self.carreRouge[i].vertice[i].x >= self.rectangleBleu[i].edge[3] :
+                    return True
 
-        
-    
-    #def minuteur(self, sec):
-        mins = sec // 60
-        sec = sec % 60
-        hours = mins // 60
-        mins = mins % 60
-        self.vue.setTimer("{0}:{1}:{2}".format(int(hours), int(mins), sec))
-    
     #def ecrireScore(self, score):
-        self.fileData = [self.nom, self.difficulte, score]
-        with open('FichierScores.csv', 'a') as csvFile :
-            ecriture_score = csv.writer(csvFile, delimiter=',')
-            ecriture_score.writerow(self.fileData)
+    #    self.fileData = [self.nom, self.difficulte, score]
+    #    with open('FichierScores.csv', 'a') as csvFile :
+    #        ecriture_score = csv.writer(csvFile, delimiter=',')
+    #        ecriture_score.writerow(self.fileData)
 
     '''
     def trier(self) :                                       ###### pas sur du fonctionnement de cette fonction! demander a isi

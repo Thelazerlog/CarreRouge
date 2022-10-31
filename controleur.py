@@ -1,5 +1,5 @@
 from vue import JeuVue, MenuVue
-from modeles import BordureNoire, ZoneBlanche, CarreRouge, RectangleBleu
+from modeles import BordureNoire, CanvasJeu, Partie, Session, ZoneBlanche, CarreRouge, RectangleBleu
 import csv
 import time
 from c31Geometry2 import *
@@ -9,7 +9,7 @@ class MenuControleur:
         self.jeuControleur = jeuControleur
         self.vue = MenuVue(root, self.nouvellePartie, self.lireScore, self.quitter)
 
-    def debuter(self) :
+    def debuter(self):
         self.vue.draw()                        
     
     def nouvellePartie(self):
@@ -35,18 +35,19 @@ class MenuControleur:
                     self.dataList.append(self.dataRead)
                     self.dataRead = []
 
-class JeuControleur :
-    def __init__(self, root) :
+class JeuControleur:
+    def __init__(self, root):
         self.partieDemarree = False
         self.nouvellePartie = lambda : print("Nouvelle partie")    
         self.vue = JeuVue(root)
-        self.carreRouge = CarreRouge(self.vue.canvas)
-        self.bordureNoire = BordureNoire(0, 0, self.vue.canvas) 
-        self.zoneBlanche = ZoneBlanche(75, 75, self.vue.canvas) 
-        self.nom = self.vue.demanderNom(root)
-        self.vue.setNom(self.nom)
-        self.difficulte = self.vue.demanderDif(root)
-        self.vue.setDif(self.difficulte)
+        self.canvasJeu = CanvasJeu(root)
+        self.carreRouge = CarreRouge(self.canvasJeu.canvas)
+        self.bordureNoire = BordureNoire(0, 0, self.canvasJeu.canvas) 
+        self.zoneBlanche = ZoneBlanche(75, 75, self.canvasJeu.canvas) 
+        self.partie = Partie()
+        self.session = Session(self.vue.demanderNom(root), self.vue.demanderDif(root))
+        self.vue.setNom(self.session.getNom())
+        self.vue.setDif(self.session.getDif())
         self.rectangleBleu = []
         self.itemCollection = []
         self.isMoving = False
@@ -54,7 +55,7 @@ class JeuControleur :
         self.vitesse = 1
         self.carreRouge.vertices = []
         for i in range(0, 4):
-            self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))
+            self.rectangleBleu.append(RectangleBleu(1,i+1, self.canvasJeu.canvas))
         self.__defineEvent()
         
         
@@ -81,7 +82,7 @@ class JeuControleur :
         self.isMoving = True
         self.tempsDebut = time.time()
         self.roulerJeu()
-
+        
     def debuter(self) :
         self.partieDemarree = True
         self.vue.draw(self.rectangleBleu)
@@ -104,6 +105,7 @@ class JeuControleur :
     #     self.isMoving = False
 
     
+
 
     # def roulerJeu(self, x, y):
     #     self.deplacementRectangleBleu()
@@ -137,16 +139,16 @@ class JeuControleur :
             return True
         elif carreY >= 465 and carreY <= 475:
             return True
-        else :
-            for i in range(0, 4) :
+        else:
+            for i in range(0, 4):
                 rectangleX = self.rectangleBleu[i].getOrigine().x
                 rectangleY = self.rectangleBleu[i].getOrigine().y
-                for j in range(0, 10) :
+                for j in range(0, 10):
                     rectangleX += j
                     rectangleY += j
                     if (carreX == rectangleX or carreX == rectangleX) or (carreY == rectangleY or carreY == rectangleY) :
                         return True
-                    else :
+                    else:
                         continue
             return False
 
@@ -183,14 +185,14 @@ class JeuControleur :
 
         
     
-    def minuteur(self, sec) :
+    #def minuteur(self, sec):
         mins = sec // 60
         sec = sec % 60
         hours = mins // 60
         mins = mins % 60
-        self.vue.setTimer("{0}:{1}:{2}".format(int(hours),int(mins),sec))
+        self.vue.setTimer("{0}:{1}:{2}".format(int(hours), int(mins), sec))
     
-    def ecrireScore(self, score) :
+    #def ecrireScore(self, score):
         self.fileData = [self.nom, self.difficulte, score]
         with open('FichierScores.csv', 'a') as csvFile :
             ecriture_score = csv.writer(csvFile, delimiter=',')
@@ -260,13 +262,14 @@ class JeuControleur :
                 x -= 2 * self.vitesse
                 y += 2 * self.vitesse
 
+
             # AFFECTATIONS MODÈLES & VUE
             deplacement = Vecteur(x, y)
             self.rectangleBleu[i].translateTo(deplacement)
             self.rectangleBleu[i].modificationPos(deplacement)
         self.vue.draw(self.rectangleBleu)
                                             
-    def deplacementCarreRouge(self, x, y) : 
+    def deplacementCarreRouge(self, x, y):
         deplacement = Vecteur(x, y) 
         self.carreRouge.translateTo(deplacement)
         self.carreRouge.modificationPos(deplacement)

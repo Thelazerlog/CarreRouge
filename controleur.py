@@ -52,6 +52,7 @@ class JeuControleur :
         self.isMoving = False
         self.isPressed = False
         self.vitesse = 1
+        self.carreRouge.vertices = []
         for i in range(0, 4):
             self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))
         self.__defineEvent()
@@ -148,6 +149,39 @@ class JeuControleur :
                     else :
                         continue
             return False
+
+    def isInside(self) :
+
+        '''
+        VERTICES DU POLYGONE : SENS HORAIRE À PARTIR DU COIN SUPÉRIEUR GAUCHE : 
+        0 = COIN HAUT-GAUCHE
+        1 = COIN HAUT-DROITE
+        2 = COIN BAS-DROITE
+        3 = COIN BAS-GAUCHE
+        '''
+
+        #Génération vertices carré rouge
+        for i in range (0, 4) :
+            if i == 0 :
+                x = self.carreRouge.getOrigine().x - self.carreRouge.getArrete / 2
+                y = self.carreRouge.getOrigine().y - self.carreRouge.getArrete / 2
+            elif i == 1 :
+                x = self.carreRouge.getOrigine().x + self.carreRouge.getArrete / 2
+                y = self.carreRouge.getOrigine().y - self.carreRouge.getArrete / 2
+            elif i == 2 :
+                x = self.carreRouge.getOrigine().x + self.carreRouge.getArrete / 2
+                y = self.carreRouge.getOrigine().y + self.carreRouge.getArrete / 2
+            elif i == 3 : 
+                x = self.carreRouge.getOrigine().x - self.carreRouge.getArrete / 2
+                y = self.carreRouge.getOrigine().y + self.carreRouge.getArrete / 2
+            self.carreRouge.vertices[i] = Vecteur(x,y)
+
+        #Vérification si 1 vertex du carré rouge est à l'intérieur de chaque rectangle bleu
+        for i in range(0, 4) :
+            if self.carreRouge.vertice[i].y <= self.rectangleBleu[i].edge[1] and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].edge[1] and self.carreRouge[i].vertice[i].x <= self.rectangleBleu[i].edge[2] and self.carreRouge[i].vertice[i].x >= self.rectangleBleu[i].edge[3] :
+                return True
+
+        
     
     def minuteur(self, sec) :
         mins = sec // 60

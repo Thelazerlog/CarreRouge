@@ -51,6 +51,7 @@ class JeuControleur :
         self.itemCollection = []
         self.isMoving = False
         self.isPressed = False
+        self.vitesse = 1
         for i in range(0, 4):
             self.rectangleBleu.append(RectangleBleu(1,i+1, self.vue.canvas))
         self.__defineEvent()
@@ -62,13 +63,14 @@ class JeuControleur :
 
     def __defineEvent(self):
         self.vue.setListen("<B1-Motion>", self.buttonPressed)
-        self.vue.setListen("<ButtonRelease-1>", self.buttonReleased)
+        self.vue.setListen("<ButtonRelease-1>", self.buttonReleased())
 
     def buttonPressed(self, event) : 
         self.isPressed = True
         self.x = event.x
         self.y = event.y
-        self.debuter()
+        if not self.partieDemarree :
+            self.debuter()
 
     def buttonReleased(self) :
         self.isPressed = False
@@ -83,7 +85,7 @@ class JeuControleur :
         self.partieDemarree = True
         self.vue.draw(self.rectangleBleu)
         self.vue.drawCarre(self.carreRouge)
-        self.e = LoopEvent(self.vue.root, self.roulerJeu, 50)
+        self.e = LoopEvent(self.vue.root, self.roulerJeu, 10)
         self.e.start()
 
     def roulerJeu(self) :
@@ -173,6 +175,8 @@ class JeuControleur :
     '''
     
     def deplacementRectangleBleu(self) :
+        #if self.tempsDebut > 10 :
+         #   self.vitesse = 1.5
         for i in range(0, 4) :
             x = self.rectangleBleu[i].getOrigine().x
             y = self.rectangleBleu[i].getOrigine().y
@@ -210,17 +214,17 @@ class JeuControleur :
 
             # DÉPLACEMENT LOGIQUE
             if self.rectangleBleu[i].getAxe() == 0:
-                x -= 1
-                y -= 1
+                x -= 2 * self.vitesse
+                y -= 2 * self.vitesse
             elif self.rectangleBleu[i].getAxe() == 1:
-                x += 1
-                y -= 1
+                x += 2 * self.vitesse
+                y -= 2 * self.vitesse
             elif self.rectangleBleu[i].getAxe() == 2 :
-                x += 1
-                y += 1
+                x += 2 * self.vitesse
+                y += 2 * self.vitesse
             elif self.rectangleBleu[i].getAxe() == 3 :
-                x -= 1
-                y += 1
+                x -= 2 * self.vitesse
+                y += 2 * self.vitesse
 
             # AFFECTATIONS MODÈLES & VUE
             deplacement = Vecteur(x, y)

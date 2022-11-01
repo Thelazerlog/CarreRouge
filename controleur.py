@@ -50,7 +50,6 @@ class JeuControleur:
         self.carreRouge = CarreRouge(self.canvasJeu.canvas)
         self.bordureNoire = BordureNoire(0, 0, self.canvasJeu.canvas) 
         self.zoneBlanche = ZoneBlanche(75, 75, self.canvasJeu.canvas) 
-        self.partie = Partie()
         self.session = Session(self.vue.demanderNom(root), self.vue.demanderDif(root))
         self.vue.setNom(self.session.getNom())
         self.vue.setDif(self.session.getDif())
@@ -86,6 +85,7 @@ class JeuControleur:
         self.x = event.x
         self.y = event.y
         if not self.partieDemarree :
+            self.partie = Partie()
             self.debuter()
             
     def buttonReleased(self) :
@@ -144,6 +144,7 @@ class JeuControleur:
                     rectangleX += j
                     rectangleY += j
                     if (carreX == rectangleX or carreX == rectangleX) or (carreY == rectangleY or carreY == rectangleY) or self.isInside() :
+                        self.session.ajouterPartie(self.partie)
                         return True
                     else:
                         continue

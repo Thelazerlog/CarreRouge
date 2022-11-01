@@ -25,13 +25,13 @@ class CarreRouge(Carre):
         self.axeDeplacement = random.randint(0, 3)
         self.arrete = 40
         super().__init__(canvas, Vecteur(225, 225), self.arrete, 0 , "red", "red", 0)
-        #self.vertices = [Vecteur(self.origine.x - self.arrete / 2, self.origine.y - self.arrete / 2), Vecteur(self.origine.x + self.arrete / 2, self.origine.y - self.arrete / 2), Vecteur(self.origine.x + self.arrete / 2, self.origine.y + self.arrete / 2), Vecteur(self.origine.x - self.arrete / 2,self.origine.y + self.arrete / 2)]
+        self.vertices = [Vecteur(self.origine.x - self.arrete / 2, self.origine.y - self.arrete / 2), Vecteur(self.origine.x + self.arrete / 2, self.origine.y - self.arrete / 2), Vecteur(self.origine.x + self.arrete / 2, self.origine.y + self.arrete / 2), Vecteur(self.origine.x - self.arrete / 2,self.origine.y + self.arrete / 2)]
 
-    #def resetVertices(self):
-        #self.vertices[0] = Vecteur(self.origine.x - self.arrete / 2, self.origine.y - self.arrete / 2)
-        #self.vertices[1] = Vecteur(self.origine.x + self.arrete / 2, self.origine.y - self.arrete / 2)
-        #self.vertices[2] = Vecteur(self.origine.x + self.arrete / 2, self.origine.y + self.arrete / 2)
-        #self.vertices[3] = Vecteur(self.origine.x - self.arrete / 2, self.origine.y + self.arrete / 2)
+    def resetVertices(self):
+        self.vertices[0] = Vecteur(self.origine.x - self.arrete / 2, self.origine.y - self.arrete / 2)
+        self.vertices[1] = Vecteur(self.origine.x + self.arrete / 2, self.origine.y - self.arrete / 2)
+        self.vertices[2] = Vecteur(self.origine.x + self.arrete / 2, self.origine.y + self.arrete / 2)
+        self.vertices[3] = Vecteur(self.origine.x - self.arrete / 2, self.origine.y + self.arrete / 2)
     def getOrigine(self) -> Vecteur:
         """Permet de récupérer l'origine du carré
 

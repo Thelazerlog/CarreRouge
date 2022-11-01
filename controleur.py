@@ -161,6 +161,10 @@ class JeuControleur:
 
         self.vue.setTimer(self.partie.getTemps())
         self.deplacementRectangleBleu()
+        ######### A voir!!!!!
+        if (self.verifierCollision()):
+            # arreter le jeu
+            quit() # je ne sais pas quesque quit fait mais il faut dire que la partie est finie ici
         if(self.isPressed) :
             self.deplacementCarreRouge(self.x, self.y)
             

@@ -1,18 +1,33 @@
 from vue import JeuVue, MenuVue
 from modeles import BordureNoire, CanvasJeu, Partie, Session, ZoneBlanche, CarreRouge, RectangleBleu
 import csv
-import time
 from c31Geometry2 import *
 
 class MenuControleur:
+    """Cette classe controle le menu du jeu 
+
+    Attributes:
+        jeuControleur: le controleur du jeu
+        vue: l'affichage du jeu sur l'écran
+    """
     def __init__(self, root, jeuControleur):
+        """Initialise le menu du jeu
+
+        Param:
+            root: la fenêtre tkinter
+            jeuControleur: le controleur du jeu
+        """
         self.jeuControleur = jeuControleur
         self.vue = MenuVue(root, self.nouvellePartie, self.lireScore, self.quitter)
 
     def debuter(self):
+        """Dessine le menu sur la fenêtre du jeu
+        """
         self.vue.draw()                        
     
     def nouvellePartie(self):
+        """Permet de créer une nouvelle partie
+        """
         if self.jeuControleur.demarrerPartie():
             root = self.jeuControleur.vue.root
             self.jeuControleur.vue.destroy()  
@@ -20,9 +35,17 @@ class MenuControleur:
         self.jeuControleur.debuter()
 
     def quitter(self):
+        """Ferme la fenêtre du jeu
+        """
         self.jeuControleur.vue.destroy()
 
     def lireScore(self):
+        """Récupère les données dans le fichier de scores externe
+        
+        Attributes:
+            dataList: la liste de données
+            dataRead: 
+        """
         with open('FichierScores.csv', 'r') as csvFile:
             lecteur_score = csv.reader(csvFile, delimiter=',')
             self.dataList = [[]]
@@ -36,6 +59,26 @@ class MenuControleur:
                     self.dataRead = []
 
 class JeuControleur:
+    """Cette classe contrôle la logique du jeu
+
+    Attributes:
+        partieDemarree: l'état de la partie
+        nouvellePartie: initialiser les paramètre du jeu 
+        vue: l'affichage du jeu sur l'écran
+        canvasJeu: l'aire du jeu
+        carreRouge: les attributs du carré rouge
+        bordureNoire: les attributs de la bordure noire
+        zoneBlanche: les attributs de la zone blanche
+        partie: les attributs de la partie actuelle
+        session: les attributs de la session actuelle
+        rectangleBleu: les attrbuts des rectangles bleus
+        isMoving: dit si le carré rouge est en train de bouger
+        isPressed: dit si le bouton de la souris est cliquée 
+        vitesse: la vitesse de mouvement des rectangles bleus
+        x: la position actuelle des rectangles bleus et du carré rouge sur l'axe X
+        y: la position actuelle des rectangles bleus et du carré rouge sur l'axe Y
+        e: la loop du jeu
+    """
     def __init__(self, root):
         self.partieDemarree = False
         self.nouvellePartie = lambda : print("Nouvelle partie")    
@@ -49,7 +92,7 @@ class JeuControleur:
         self.vue.setNom(self.session.getNom())
         self.vue.setDif(self.session.getDif())
         self.rectangleBleu = []
-        self.itemCollection = []
+        #self.itemCollection = []
         self.isMoving = False
         self.isPressed = False
         self.vitesse = 1
@@ -61,6 +104,12 @@ class JeuControleur:
         
         
     def demarrerPartie(self):
+        '''
+        L'état d'une partie de jeu (une partie en cours ou non)
+        
+        Return: 
+            boolean: l'état de la partie
+        '''
         return self.partieDemarree
 
     def __defineEvent(self):
@@ -92,6 +141,10 @@ class JeuControleur:
 
     def roulerJeu(self) :
         self.deplacementRectangleBleu()
+        ######### A voir!!!!!
+        if (self.verifierCollision()):
+            # arreter le jeu
+            quit() # je ne sais pas quesque quit fait mais il faut dire que la partie est finie ici
         if(self.isPressed) :
             self.deplacementCarreRouge(self.x, self.y)
         

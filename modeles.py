@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import random
+from re import S
 import time
 from c31Geometry2 import *
 import csv
@@ -24,8 +25,13 @@ class CarreRouge(Carre):
         self.axeDeplacement = random.randint(0, 3)
         self.arrete = 40
         super().__init__(canvas, Vecteur(225, 225), self.arrete, 0 , "red", "red", 0)
+        self.vertices = [Vecteur(self.origine.x - self.arrete / 2, self.origine.y - self.arrete / 2), Vecteur(self.origine.x + self.arrete / 2, self.origine.y - self.arrete / 2), Vecteur(self.origine.x + self.arrete / 2, self.origine.y + self.arrete / 2), Vecteur(self.origine.x - self.arrete / 2,self.origine.y + self.arrete / 2)]
 
-
+    def resetVertices(self):
+        self.vertices[0] = Vecteur(self.origine.x - self.arrete / 2, self.origine.y - self.arrete / 2)
+        self.vertices[1] = Vecteur(self.origine.x + self.arrete / 2, self.origine.y - self.arrete / 2)
+        self.vertices[2] = Vecteur(self.origine.x + self.arrete / 2, self.origine.y + self.arrete / 2)
+        self.vertices[3] = Vecteur(self.origine.x - self.arrete / 2, self.origine.y + self.arrete / 2)
     def getOrigine(self) -> Vecteur:
         """Permet de récupérer l'origine du carré
 
@@ -78,12 +84,13 @@ class RectangleBleu(Rectangle):
             largeur(int): taille de la largeur du rectangle
             axeDeplacement(int) : direction du mouvement du rectangle
             vitesse(int) = vitesse de déplacement du rectangle
+            edge(double) = tableau permetant de voir les bords du rectangle
     """    
 
     def __init__(self, vitesse, rectangleChiffre, canvas):
         """Permet de definir un rectangle bleu
 
-            Initialise origine, vitesse, axeDeplacement, largeur et hauteur
+            Initialise origine, vitesse, axeDeplacement, largeur, hauteur et edge
 
             Args: 
                 canvas (tk.Canvas): canvas où l'on dessine le rectangle
@@ -112,8 +119,20 @@ class RectangleBleu(Rectangle):
         elif rectangleChiffre == 4: #Rectangle inferieur droit
             self.largeur = 100
             self.hauteur = 20
-            super().__init__(canvas, Vecteur(355,340),self.largeur ,self.hauteur, 0, "blue", "blue", 1)       
- 
+            super().__init__(canvas, Vecteur(355,340),self.largeur ,self.hauteur, 0, "blue", "blue", 1)  
+              
+        self.edge = [self.getOrigine().y - self.hauteur / 2, self.getOrigine().x + self.largeur / 2, self.getOrigine().y + self.hauteur / 2, self.getOrigine().x - self.largeur / 2]
+
+    def getEdge(self, id):
+        """Permet de récupérer l'edge
+        Args:
+            id(int): numero de l'edge voulue
+
+        Returns:
+            double: bord du rectangle
+        """
+        return self.edge[id]
+
     def getAxe(self):
         """Permet de récupérer l'axe de déplacement
 
@@ -153,6 +172,15 @@ class RectangleBleu(Rectangle):
             int: vitesse de déplacement du rectangle
         """
         return self.vitesse
+
+    def setEdge(self, id, nouvelleValeur):
+        """Définit un bord du rectangle
+
+        Args:
+            id (int): numero de l'edge voulue
+            nouvelleValeur (double): nouvelle valeur du parametre
+        """
+        self.edge[id] = nouvelleValeur
  
     def setVitesse(self, vitesse):
         """Définit la vitesse de déplacement

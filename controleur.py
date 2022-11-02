@@ -91,16 +91,14 @@ class JeuControleur:
         self.vue.setNom(self.session.getNom())
         self.vue.setDif(self.session.getDif())
         self.rectangleBleu = []
-        #self.itemCollection = []
         self.isMoving = False
         self.isPressed = False
-        self.vitesse = 1
-        self.carreRouge.vertices = []
+        self.vitesse = int(self.session.getDif())
         for i in range(0, 4):
             self.rectangleBleu.append(RectangleBleu(1,i+1, self.canvasJeu.canvas))
+        self.vue.draw(self.rectangleBleu)
+        self.vue.drawCarre(self.carreRouge)
         self.__defineEvent()
-        
-        
         
     def demarrerPartie(self):
         '''
@@ -112,10 +110,18 @@ class JeuControleur:
         return self.partieDemarree
 
     def __defineEvent(self):
+        '''
+        Créer des écouteurs d'évenements
+        '''
         self.vue.setListen("<B1-Motion>", self.buttonPressed)
         self.vue.setListen("<ButtonRelease-1>", self.buttonReleased())
 
     def buttonPressed(self, event) : 
+        '''
+        Action lorsque le bouton est appuyé : récupère position du curseur et démarre partie
+        Param : 
+            event: évènement du canvas
+        '''
         self.isPressed = True
         self.x = event.x
         self.y = event.y
@@ -124,133 +130,83 @@ class JeuControleur:
             self.debuter()
 
     def buttonReleased(self) :
+        '''
+        Détermine lorsque le boutton a été relâché
+        '''
         self.isPressed = False
-
-
-    def evenement(self):
-        self.isMoving = True
-        self.tempsDebut = time.time()
-        self.roulerJeu()
         
     def debuter(self) :
+        '''
+        Fait débuter une partie, génère la boucle pour faire rouler le jeu, termine la partie en cas de collision
+        '''
         self.partieDemarree = True
-        self.vue.draw(self.rectangleBleu)
-        self.vue.drawCarre(self.carreRouge)
         self.e = LoopEvent(self.vue.root, self.roulerJeu, 10)
         self.e.start()
-
-    def roulerJeu(self) :
-        self.deplacementRectangleBleu()
-        ######### A voir!!!!!
-        if (self.verifierCollision()):
-            # arreter le jeu
-            quit() # je ne sais pas quesque quit fait mais il faut dire que la partie est finie ici
-        if(self.isPressed) :
-            self.deplacementCarreRouge(self.x, self.y)
         
-
-
-
-
-
-    # def arretCarreRouge(self, event) :
-    #     self.deplacementCarreRouge(event.x, event.y)
-    #     self.isMoving = False
-
-    
-
-
-    # def roulerJeu(self, x, y):
-    #     self.deplacementRectangleBleu()
-    #     while (not self.verifierCollision()) :
-    #         if(self.isMoving) :
-    #             self.deplacementCarreRouge(x, y)
-    #             self.verifierCollision()
-
-
-
-    # if self.verifierCollision():
-    #     tempsFin = time.time()
-    #     self.minuteur(tempsFin - self.tempsDebut)
-    #     temps = tempsFin - self.tempsDebut
-    #     self.ecrireScore("{:.2f}".format(temps))
-    #     self.vue.setTimer("{:.2f}".format(temps))  # Pour afficher 2 chiffres après la virgule
-    
+             
+    def roulerJeu(self) :
+        '''
+        Actualise le timer, les déplacements des rectangles bleus et le déplacement du carré rouge
+        '''
+        if not self.verifierCollision() :
+            self.vue.setTimer(self.partie.getTemps())
+            self.deplacementRectangleBleu()
+            if self.isPressed :
+                self.deplacementCarreRouge(self.x, self.y)
+        else :
+            self.terminerPartie()
             
+    def terminerPartie(self) :
+        self.session.ajouterPartie(self.partie)
             
     def verifierCollision(self) :
+        '''
+        Vérifie si le carré rouge a eu une collision avec la bordure ou avec un rectangle
+        Retourne :
+            Si une collision a eu lieu (boolean), true = il y a eu collision
+        '''
         # On recupere la position du carré rouge
-        carreX = self.carreRouge.get_origine().x
-        carreY = self.carreRouge.get_origine().y
+        carreX = self.carreRouge.getOrigine().x
+        carreY = self.carreRouge.getOrigine().y
 
         # Détéction de collision avec la bordure noire
-        if carreX >= 75 and carreX <= 85:
+        if carreX <= 50 + self.carreRouge.getArrete() / 2:
             return True
-        elif carreX >= 465 and carreX <= 490:
+        elif carreX >= 460 + self.carreRouge.getArrete() / 2:
             return True
-        elif carreY >= 88 and carreY <= 96:
+        elif carreY <= 50 + self.carreRouge.getArrete() / 2:
             return True
-        elif carreY >= 465 and carreY <= 475:
+        elif carreY >= 460 + self.carreRouge.getArrete() / 2:
             return True
-        else:
-            for i in range(0, 4):
-                rectangleX = self.rectangleBleu[i].getOrigine().x
-                rectangleY = self.rectangleBleu[i].getOrigine().y
-                for j in range(0, 10):
-                    rectangleX += j
-                    rectangleY += j
-                    if (carreX == rectangleX or carreX == rectangleX) or (carreY == rectangleY or carreY == rectangleY) or self.isInside() :
-                        self.session.ajouterPartie(self.partie)
-                        return True
-                    else:
-                        continue
+        # elif self.isInside() :
+        #     return True
+        else :
             return False
 
     def isInside(self) :
-
         '''
-        VERTICES DU POLYGONE : SENS HORAIRE À PARTIR DU COIN SUPÉRIEUR GAUCHE : 
-        0 = COIN HAUT-GAUCHE
-        1 = COIN HAUT-DROITE
-        2 = COIN BAS-DROITE
-        3 = COIN BAS-GAUCHE
+        Cette fonction détecte si le carré rouge est situé à l'intérieur d'un rectangle bleu
+            VERTICES DU POLYGONE : SENS HORAIRE À PARTIR DU COIN SUPÉRIEUR GAUCHE : 
+            0 = COIN HAUT-GAUCHE
+            1 = COIN HAUT-DROITE
+            2 = COIN BAS-DROITE
+            3 = COIN BAS-GAUCHE
+        Retourne : si le carré rouge est en collision avec un rectangle bleu (boolean), true = collision entre carré rouge et rectangle bleu
         '''
-
-        #Génération vertices carré rouge
-        for i in range (0, 4) :
-            if i == 0 :
-                x = self.carreRouge.getOrigine().x - self.carreRouge.getArrete / 2
-                y = self.carreRouge.getOrigine().y - self.carreRouge.getArrete / 2
-            elif i == 1 :
-                x = self.carreRouge.getOrigine().x + self.carreRouge.getArrete / 2
-                y = self.carreRouge.getOrigine().y - self.carreRouge.getArrete / 2
-            elif i == 2 :
-                x = self.carreRouge.getOrigine().x + self.carreRouge.getArrete / 2
-                y = self.carreRouge.getOrigine().y + self.carreRouge.getArrete / 2
-            elif i == 3 : 
-                x = self.carreRouge.getOrigine().x - self.carreRouge.getArrete / 2
-                y = self.carreRouge.getOrigine().y + self.carreRouge.getArrete / 2
-            self.carreRouge.vertices[i] = Vecteur(x,y)
+        self.carreRouge.resetVertices()
+        for i in range(0, 4) :
+            self.rectangleBleu[i].resetEdge()
 
         #Vérification si 1 vertex du carré rouge est à l'intérieur de chaque rectangle bleu
         for i in range(0, 4) :
-            if self.carreRouge.vertice[i].y <= self.rectangleBleu[i].edge[1] and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].edge[1] and self.carreRouge[i].vertice[i].x <= self.rectangleBleu[i].edge[2] and self.carreRouge[i].vertice[i].x >= self.rectangleBleu[i].edge[3] :
+            if self.carreRouge.vertice[i].y <= self.rectangleBleu[i].getEdge(0) and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].getEdge(1) and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].getEdge(2) and self.carreRouge.vertice[i].x >= self.rectangleBleu[i].edge[3] :
                 return True
 
-        
-    
-    #def minuteur(self, sec):
-        mins = sec // 60
-        sec = sec % 60
-        hours = mins // 60
-        mins = mins % 60
-        self.vue.setTimer("{0}:{1}:{2}".format(int(hours), int(mins), sec))
-    
-    #def ecrireScore(self, score):
-        self.fileData = [self.nom, self.difficulte, score]
-        with open('FichierScores.csv', 'a') as csvFile :
-            ecriture_score = csv.writer(csvFile, delimiter=',')
-            ecriture_score.writerow(self.fileData)
+    # def ecrireScore(self, score):
+    #     self.fileData = [self.nom, self.difficulte, score]
+    #     with open('FichierScores.csv', 'a') as csvFile :
+    #         ecriture_score = csv.writer(csvFile, delimiter=',')
+    #         ecriture_score.writerow(self.fileData)
 
     '''
     def trier(self) :                                       ###### pas sur du fonctionnement de cette fonction! demander a isi
@@ -265,65 +221,90 @@ class JeuControleur:
     '''
     
     def deplacementRectangleBleu(self) :
-        #if self.tempsDebut > 10 :
-         #   self.vitesse = 1.5
-        for i in range(0, 4) :
-            x = self.rectangleBleu[i].getOrigine().x
-            y = self.rectangleBleu[i].getOrigine().y
-            '''
-            deplacement : 
+        '''
+        Vérifie la position de chaque rectangle bleu et le déplace en conséquence
+        le déplacement est représenté par : 
                 axeDeplacement :
                     0 = nord-ouest
                     1 = nord-est
                     2 = sud-est
                     3 = sud-ouest
-                    4 = ... fonctionnalités futures
-            '''
+        '''
+        for i in range(0, 4) :
+            x = self.rectangleBleu[i].getOrigine().x
+            y = self.rectangleBleu[i].getOrigine().y
+            self.detectionCollisionsLaterales(i, x, y)
+            deplacement = self.deplacementLogique(i, x, y)
             
-            # DÉTECTION DE COLLISIONS LATÉRALES 
-            if x >= 75 and x <= 85 : #collision bordure gauche (axes de directions ouest deviennent de direction est)
-                if self.rectangleBleu[i].getAxe() == 0:
-                    self.rectangleBleu[i].setAxe(1)
-                else : 
-                    self.rectangleBleu[i].setAxe(2)
-            if x >= 465 and x <= 490 : #collision bordure droite (axes de directions est deviennent de direction ouest)
-                if self.rectangleBleu[i].getAxe() == 1:
-                    self.rectangleBleu[i].setAxe(0)
-                else :
-                    self.rectangleBleu[i].setAxe(3)
-            if y >= 70 and y <= 80 : #collision bordure haut (axes de directions nord deviennent de direction sud)
-                if self.rectangleBleu[i].getAxe() == 1:
-                    self.rectangleBleu[i].setAxe(2)
-                else :
-                    self.rectangleBleu[i].setAxe(3)
-            if y >= 465 and y <= 475 : #collision bordure bas (axes de directions sud deviennent de direction nord)
-                if self.rectangleBleu[i].getAxe() == 2:
-                    self.rectangleBleu[i].setAxe(1)
-                else :
-                    self.rectangleBleu[i].setAxe(0)
-
-            # DÉPLACEMENT LOGIQUE
-            if self.rectangleBleu[i].getAxe() == 0:
-                x -= 2 * self.vitesse
-                y -= 2 * self.vitesse
-            elif self.rectangleBleu[i].getAxe() == 1:
-                x += 2 * self.vitesse
-                y -= 2 * self.vitesse
-            elif self.rectangleBleu[i].getAxe() == 2 :
-                x += 2 * self.vitesse
-                y += 2 * self.vitesse
-            elif self.rectangleBleu[i].getAxe() == 3 :
-                x -= 2 * self.vitesse
-                y += 2 * self.vitesse
-
-
             # AFFECTATIONS MODÈLES & VUE
-            deplacement = Vecteur(x, y)
             self.rectangleBleu[i].translateTo(deplacement)
             self.rectangleBleu[i].modificationPos(deplacement)
         self.vue.draw(self.rectangleBleu)
+        
+    def detectionCollisionsLaterales(self, i, x, y) : 
+        '''
+        Détermine s'il y a collision latérale, puis affecte le nouvel axe de déplacement de chaque rectangle bleu en conséquence
+        Param :  
+            i: index du rectangle dans le tableau des rectangles bleus (int)
+            x: position en x de l'origine du rectangle (int)
+            y: position en y de l'origine du rectangle (int)
+        '''
+
+        # DÉTECTION DE COLLISIONS LATÉRALES 
+        if x >= 75 and x <= 85 : #collision bordure gauche (axes de directions ouest deviennent de direction est)
+            if self.rectangleBleu[i].getAxe() == 0:
+                self.rectangleBleu[i].setAxe(1)
+            else : 
+                self.rectangleBleu[i].setAxe(2)
+        if x >= 465 and x <= 490 : #collision bordure droite (axes de directions est deviennent de direction ouest)
+            if self.rectangleBleu[i].getAxe() == 1:
+                self.rectangleBleu[i].setAxe(0)
+            else :
+                self.rectangleBleu[i].setAxe(3)
+        if y >= 70 and y <= 80 : #collision bordure haut (axes de directions nord deviennent de direction sud)
+            if self.rectangleBleu[i].getAxe() == 1:
+                self.rectangleBleu[i].setAxe(2)
+            else :
+                self.rectangleBleu[i].setAxe(3)
+        if y >= 465 and y <= 475 : #collision bordure bas (axes de directions sud deviennent de direction nord)
+            if self.rectangleBleu[i].getAxe() == 2:
+                self.rectangleBleu[i].setAxe(1)
+            else :
+                self.rectangleBleu[i].setAxe(0)
+
+    def deplacementLogique(self, i, x, y) : 
+        '''
+        Effectue les déplacements de l'origine de chaque rectangle bleu
+        Param :
+            i: index du rectangle dans le tableau des rectangles bleus (int)
+            x: position en x de l'origine du rectangle (int)
+            y: position en y de l'origine du rectangle (int)
+        Retourne : 
+            Vecteur représentant la coordonnée d'origine de chaque rectangle (Vecteur)
+        '''
+
+        # DÉPLACEMENT LOGIQUE
+        if self.rectangleBleu[i].getAxe() == 0:
+            x -= 2 * self.vitesse
+            y -= 2 * self.vitesse
+        elif self.rectangleBleu[i].getAxe() == 1:
+            x += 2 * self.vitesse
+            y -= 2 * self.vitesse
+        elif self.rectangleBleu[i].getAxe() == 2 :
+            x += 2 * self.vitesse
+            y += 2 * self.vitesse
+        elif self.rectangleBleu[i].getAxe() == 3 :
+            x -= 2 * self.vitesse
+            y += 2 * self.vitesse
+        return Vecteur(x, y)
                                             
     def deplacementCarreRouge(self, x, y):
+        '''
+        Déplace le carré rouge aux positions du curseur
+        Param :
+            x : position en y du curseur (int)
+            y : position en y du curseur (int)
+        '''
         deplacement = Vecteur(x, y) 
         self.carreRouge.translateTo(deplacement)
         self.carreRouge.modificationPos(deplacement)

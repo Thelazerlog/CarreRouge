@@ -60,9 +60,10 @@ class MenuControleur:
                 cpt += 1
         for i in range (0, len(self.dataRead)) :
             for j in range (0, 3) :
-                self.string += self.dataList[i][j]
+                self.string += str(self.dataList[i][j])
                 self.string += "    "
             self.string += "\n"
+        print(self.string)
         self.vue.setScore(self.string)
 
 
@@ -169,7 +170,7 @@ class JeuControleur:
             self.terminerPartie()
             
     def terminerPartie(self) :
-        self.session.ajouterPartie(self.partie)
+        self.session.ajouterPartie(self.partie.getTemps())
         self.vue.destroy(self.canvasJeu.canvas)
         self.e.stop()
         self.genererJeu()
@@ -222,24 +223,6 @@ class JeuControleur:
                         if self.carreRouge.vertices[j].y <= self.rectangleBleu[i].getEdge(2) :
                             if self.carreRouge.vertices[j].x >= self.rectangleBleu[i].getEdge(3) :
                                 return True
-
-    # def ecrireScore(self, score):
-    #     self.fileData = [self.nom, self.difficulte, score]
-    #     with open('FichierScores.csv', 'a') as csvFile :
-    #         ecriture_score = csv.writer(csvFile, delimiter=',')
-    #         ecriture_score.writerow(self.fileData)
-
-    '''
-    def trier(self) :                                       ###### pas sur du fonctionnement de cette fonction! demander a isi
-        for i in range(0, len(self.dataList) - 1) :
-            max = i
-            for j in range(i, len(self.dataList)) :
-                if self.dataList[j][3] >= self.dataList[max][3] :
-                    max = j
-            temp = self.dataList[i]
-            self.dataList[i] = self.dataList[max]
-            self.dataList[max] = temp
-    '''
     
     def deplacementRectangleBleu(self) :
         '''

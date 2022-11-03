@@ -130,7 +130,7 @@ class JeuVue:
         Args:
             temp(String(format)) : le temp de la partie
         """
-        self.timer.config(text= "Mineuteur : " + str(temp) + "s")
+        self.timer.config(text= str(temp) + "s")
 
     def demanderNom(self,root) :
         """ demande le nom de l'utulisateur dans un pop up

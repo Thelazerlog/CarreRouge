@@ -18,21 +18,22 @@ class MenuControleur:
             jeuControleur: le controleur du jeu
         """
         self.jeuControleur = jeuControleur
-        self.vue = MenuVue(root, self.nouvellePartie, self.lireScore, self.quitter)
+        self.vue = MenuVue(root, self.nouvelleSession, self.lireScore, self.quitter)
 
     def debuter(self):
         """Dessine le menu sur la fenêtre du jeu
         """
         self.vue.draw()                        
     
-    def nouvellePartie(self):
-        """Permet de créer une nouvelle partie
+    def nouvelleSession(self):
+        """Permet de créer une nouvelle session
         """
-        if self.jeuControleur.demarrerPartie():
-            root = self.jeuControleur.vue.root
-            self.jeuControleur.vue.destroy()  
-            self.jeuControleur = JeuControleur(root)
-        self.jeuControleur.debuter()
+        self.jeuControleur.session.sauverScore()
+        self.jeuControleur.session = Session(self.jeuControleur.vue.demanderNom(self.jeuControleur.root), self.jeuControleur.vue.demanderDif(self.jeuControleur.root))
+        self.jeuControleur.vue.setNom(self.jeuControleur.session.getNom())
+        self.jeuControleur.vue.setDif(self.jeuControleur.session.getDif())
+        self.jeuControleur.terminerPartie()
+
 
     def quitter(self):
         """Ferme la fenêtre du jeu
@@ -80,16 +81,19 @@ class JeuControleur:
         e: la loop du jeu
     """
     def __init__(self, root):
-        self.partieDemarree = False
-        self.nouvellePartie = lambda : print("Nouvelle partie")    
+        self.root = root
         self.vue = JeuVue(root)
         self.canvasJeu = CanvasJeu(root)
-        self.carreRouge = CarreRouge(self.canvasJeu.canvas)
-        self.bordureNoire = BordureNoire(0, 0, self.canvasJeu.canvas) 
-        self.zoneBlanche = ZoneBlanche(75, 75, self.canvasJeu.canvas) 
-        self.session = Session(self.vue.demanderNom(root), self.vue.demanderDif(root))
+        self.session = Session(self.vue.demanderNom(self.root), self.vue.demanderDif(self.root))
         self.vue.setNom(self.session.getNom())
         self.vue.setDif(self.session.getDif())
+        self.bordureNoire = BordureNoire(0, 0, self.canvasJeu.canvas) 
+        self.zoneBlanche = ZoneBlanche(75, 75, self.canvasJeu.canvas) 
+        self.genererJeu()
+        
+    def genererJeu(self):
+        self.partieDemarree = False
+        self.carreRouge = CarreRouge(self.canvasJeu.canvas)
         self.rectangleBleu = []
         self.isMoving = False
         self.isPressed = False
@@ -140,8 +144,9 @@ class JeuControleur:
         Fait débuter une partie, génère la boucle pour faire rouler le jeu, termine la partie en cas de collision
         '''
         self.partieDemarree = True
-        self.e = LoopEvent(self.vue.root, self.roulerJeu, 10)
-        self.e.start()
+        if self.partieDemarree :
+            self.e = LoopEvent(self.vue.root, self.roulerJeu, 10)
+            self.e.start()
         
              
     def roulerJeu(self) :
@@ -158,6 +163,8 @@ class JeuControleur:
             
     def terminerPartie(self) :
         self.session.ajouterPartie(self.partie)
+        self.genererJeu()
+        
             
     def verifierCollision(self) :
         '''

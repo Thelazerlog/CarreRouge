@@ -56,11 +56,11 @@ class MenuControleur:
             cpt = 0
             for row in lecteur_score :
                 if(cpt % 2 == 0) :
-                    self.dataList.append(row)
+                    self.dataRead.append(row)
                 cpt += 1
         for i in range (0, len(self.dataRead)) :
             for j in range (0, 3) :
-                self.string += str(self.dataList[i][j])
+                self.string += str(self.dataRead[i][j])
                 self.string += "    "
             self.string += "\n"
         print(self.string)

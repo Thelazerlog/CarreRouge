@@ -47,17 +47,23 @@ class MenuControleur:
             dataList: la liste de données
             dataRead: 
         """
+        self.dataList = [[]]
+        self.dataRead = []
+        self.string = ""
         with open('FichierScores.csv', 'r') as csvFile:
             lecteur_score = csv.reader(csvFile, delimiter=',')
-            self.dataList = [[]]
-            self.dataRead = []
             cpt = 0
             for row in lecteur_score :
-                self.dataRead.append(row)
+                if(cpt % 2 == 0) :
+                    self.dataList.append(row)
                 cpt += 1
-                if cpt % 4 == 0 :
-                    self.dataList.append(self.dataRead)
-                    self.dataRead = []
+        for i in range (0, len(self.dataRead)) :
+            for j in range (0, 3) :
+                self.string += self.dataList[i][j]
+                self.string += "    "
+            self.string += "\n"
+        self.vue.setScore(self.string)
+
 
 class JeuControleur:
     """Cette classe contrôle la logique du jeu

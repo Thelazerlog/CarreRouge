@@ -28,6 +28,8 @@ class CarreRouge(Carre):
         self.vertices = [Vecteur(self.origine.x - self.arrete / 2, self.origine.y - self.arrete / 2), Vecteur(self.origine.x + self.arrete / 2, self.origine.y - self.arrete / 2), Vecteur(self.origine.x + self.arrete / 2, self.origine.y + self.arrete / 2), Vecteur(self.origine.x - self.arrete / 2,self.origine.y + self.arrete / 2)]
 
     def resetVertices(self):
+        """Redefinit la valeur des vertices
+        """
         self.vertices[0] = Vecteur(self.origine.x - self.arrete / 2, self.origine.y - self.arrete / 2)
         self.vertices[1] = Vecteur(self.origine.x + self.arrete / 2, self.origine.y - self.arrete / 2)
         self.vertices[2] = Vecteur(self.origine.x + self.arrete / 2, self.origine.y + self.arrete / 2)
@@ -173,14 +175,10 @@ class RectangleBleu(Rectangle):
         """
         return self.vitesse
 
-    def setEdge(self, id, nouvelleValeur):
-        """Définit un bord du rectangle
-
-        Args:
-            id (int): numero de l'edge voulue
-            nouvelleValeur (double): nouvelle valeur du parametre
+    def resetEdge(self):
+        """Redefinit la valeur des edges
         """
-        self.edge[id] = nouvelleValeur
+        self.edge = [self.getOrigine().y - self.hauteur / 2, self.getOrigine().x + self.largeur / 2, self.getOrigine().y + self.hauteur / 2, self.getOrigine().x - self.largeur / 2]
  
     def setVitesse(self, vitesse):
         """Définit la vitesse de déplacement

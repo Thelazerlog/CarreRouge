@@ -199,7 +199,7 @@ class JeuControleur:
 
         #Vérification si 1 vertex du carré rouge est à l'intérieur de chaque rectangle bleu
         for i in range(0, 4) :
-            if self.carreRouge.vertice[i].y >= self.rectangleBleu[i].getEdge(0) and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].getEdge(1) and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].getEdge(2) and self.carreRouge.vertice[i].x >= self.rectangleBleu[i].edge[3] :
+            if self.carreRouge.vertices[i].y >= self.rectangleBleu[i].getEdge(0) and self.carreRouge.vertices[i].x <= self.rectangleBleu[i].getEdge(1) and self.carreRouge.vertices[i].x <= self.rectangleBleu[i].getEdge(2) and self.carreRouge.vertices[i].x >= self.rectangleBleu[i].edge[3] :
                 return True
 
     # def ecrireScore(self, score):

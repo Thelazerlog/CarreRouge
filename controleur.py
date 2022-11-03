@@ -1,3 +1,4 @@
+from time import sleep
 from vue import JeuVue, MenuVue
 from modeles import BordureNoire, CanvasJeu, Partie, Session, ZoneBlanche, CarreRouge, RectangleBleu
 import csv
@@ -83,16 +84,16 @@ class JeuControleur:
     def __init__(self, root):
         self.root = root
         self.vue = JeuVue(root)
-        self.canvasJeu = CanvasJeu(root)
         self.session = Session(self.vue.demanderNom(self.root), self.vue.demanderDif(self.root))
         self.vue.setNom(self.session.getNom())
         self.vue.setDif(self.session.getDif())
-        self.bordureNoire = BordureNoire(0, 0, self.canvasJeu.canvas) 
-        self.zoneBlanche = ZoneBlanche(75, 75, self.canvasJeu.canvas) 
         self.genererJeu()
         
     def genererJeu(self):
         self.partieDemarree = False
+        self.canvasJeu = CanvasJeu(self.root)
+        self.bordureNoire = BordureNoire(0, 0, self.canvasJeu.canvas) 
+        self.zoneBlanche = ZoneBlanche(75, 75, self.canvasJeu.canvas) 
         self.carreRouge = CarreRouge(self.canvasJeu.canvas)
         self.rectangleBleu = []
         self.isMoving = False
@@ -163,7 +164,10 @@ class JeuControleur:
             
     def terminerPartie(self) :
         self.session.ajouterPartie(self.partie)
+        self.vue.destroy(self.canvasJeu.canvas)
+        self.e.stop()
         self.genererJeu()
+        sleep(0.5)
         
             
     def verifierCollision(self) :

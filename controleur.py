@@ -198,9 +198,13 @@ class JeuControleur:
             self.rectangleBleu[i].resetEdge()
 
         #Vérification si 1 vertex du carré rouge est à l'intérieur de chaque rectangle bleu
-        for i in range(0, 4) :
-            if self.carreRouge.vertices[i].y >= self.rectangleBleu[i].getEdge(0) and self.carreRouge.vertices[i].x <= self.rectangleBleu[i].getEdge(1) and self.carreRouge.vertices[i].x <= self.rectangleBleu[i].getEdge(2) and self.carreRouge.vertices[i].x >= self.rectangleBleu[i].edge[3] :
-                return True
+        for i in range(0, 4) : #boucle des rectangles
+            for j in range (0,4) : #boucle des vertices
+                if self.carreRouge.vertices[j].y >= self.rectangleBleu[i].getEdge(0) :
+                    if self.carreRouge.vertices[j].x <= self.rectangleBleu[i].getEdge(1) :
+                        if self.carreRouge.vertices[j].y <= self.rectangleBleu[i].getEdge(2) :
+                            if self.carreRouge.vertices[j].x >= self.rectangleBleu[i].getEdge(3) :
+                                return True
 
     # def ecrireScore(self, score):
     #     self.fileData = [self.nom, self.difficulte, score]

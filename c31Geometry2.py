@@ -2,6 +2,7 @@ import tkinter as tk
 import math
 # Permet d'encapsuler une fonction et ses paramètres
 from functools import partial, update_wrapper
+from tkinter.tix import Tree
 from turtle import pos
 
 class LoopEvent:
@@ -22,11 +23,16 @@ class LoopEvent:
         self.root = root
         self.function = callback
         self.timesleep = timesleep
+        self.run = True
 
     def start(self) :
         """Lance l'exécution de la première boucle après un premier interval de la méthode
         """
-        self.root.after(self.timesleep, LoopEvent.prepareCallback(LoopEvent.__loop, self, self.function))
+        if self.run :
+            self.root.after(self.timesleep, LoopEvent.prepareCallback(LoopEvent.__loop, self, self.function))
+
+    def stop(self) :
+        self.run = False
 
     def startImmediately(self) :
         """Lance immédiatement une première exécution de la méthode

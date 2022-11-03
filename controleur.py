@@ -37,7 +37,7 @@ class MenuControleur:
     def quitter(self):
         """Ferme la fenêtre du jeu
         """
-        self.jeuControleur.vue.destroy()
+        self.jeuControleur.vue.destroy(self.jeuControleur.vue.root)
 
     def lireScore(self):
         """Récupère les données dans le fichier de scores externe

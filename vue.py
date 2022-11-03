@@ -17,7 +17,6 @@ class MenuVue:
         :param closeApp: methode fermer l'application
         :type closeApp : method() 
         """
-        self.menuFrame= tk.Frame (root, width=300, height=450, highlightbackground="blue", highlightthickness=3)
         self.root = root
         self.score = tk.Label(root, text="")         
         self.btn_nouvellePartie = tk.Button(root, text='Nouvelle Session',
@@ -30,17 +29,17 @@ class MenuVue:
     def draw(self):
         """ dessine le menu graphique et tout les boutons
         """
-        self.btn_nouvellePartie.pack()
-        self.btn_voirScore.pack()
-        self.btn_quitApp.pack() 
-        self.menuFrame.pack(side=tk.LEFT)
+        self.btn_nouvellePartie.pack(side=tk.LEFT)
+        self.btn_voirScore.pack(side=tk.LEFT)
+        self.btn_quitApp.pack(side=tk.LEFT) 
 
     def setScore(self,score):
         """ change le champ score
 
             Args: score(String): la liste des score du fichier csv
         """
-        self.score.config(text= "Meilleur score : /n" + score )
+        self.score.config(text= "Nom    Temps   Difficulté \n" + score )
+        self.score.pack(side=tk.LEFT)
 
 
 class JeuVue:

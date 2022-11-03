@@ -34,6 +34,7 @@ class MenuControleur:
         self.jeuControleur.vue.setNom(self.jeuControleur.session.getNom())
         self.jeuControleur.vue.setDif(self.jeuControleur.session.getDif())
         self.jeuControleur.terminerPartie()
+        self.vue.draw()
 
 
     def quitter(self):

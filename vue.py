@@ -29,9 +29,9 @@ class MenuVue:
     def draw(self):
         """ dessine le menu graphique et tout les boutons
         """
-        self.btn_nouvellePartie.pack()
-        self.btn_voirScore.pack()
-        self.btn_quitApp.pack() 
+        self.btn_nouvellePartie.pack(side=tk.LEFT)
+        self.btn_voirScore.pack(side=tk.LEFT)
+        self.btn_quitApp.pack(side=tk.LEFT) 
 
     def setScore(self,score):
         """ change le champ score
@@ -39,7 +39,7 @@ class MenuVue:
             Args: score(String): la liste des score du fichier csv
         """
         self.score.config(text= "Nom    Temps   Difficulté \n" + score )
-        self.score.pack()
+        self.score.pack(side=tk.LEFT)
 
 
 class JeuVue:

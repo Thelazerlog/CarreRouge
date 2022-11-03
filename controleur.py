@@ -178,8 +178,8 @@ class JeuControleur:
             return True
         elif carreY >= 460 + self.carreRouge.getArrete() / 2:
             return True
-        # elif self.isInside() :
-        #     return True
+        elif self.isInside() :
+            return True
         else :
             return False
 
@@ -199,7 +199,7 @@ class JeuControleur:
 
         #Vérification si 1 vertex du carré rouge est à l'intérieur de chaque rectangle bleu
         for i in range(0, 4) :
-            if self.carreRouge.vertice[i].y <= self.rectangleBleu[i].getEdge(0) and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].getEdge(1) and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].getEdge(2) and self.carreRouge.vertice[i].x >= self.rectangleBleu[i].edge[3] :
+            if self.carreRouge.vertice[i].y >= self.rectangleBleu[i].getEdge(0) and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].getEdge(1) and self.carreRouge.vertice[i].x <= self.rectangleBleu[i].getEdge(2) and self.carreRouge.vertice[i].x >= self.rectangleBleu[i].edge[3] :
                 return True
 
     # def ecrireScore(self, score):
@@ -282,7 +282,9 @@ class JeuControleur:
         Retourne : 
             Vecteur représentant la coordonnée d'origine de chaque rectangle (Vecteur)
         '''
-
+        self.vitesse *= 1.0004
+        if self.vitesse >= 4.5 :
+            self.vitesse = 4.5
         # DÉPLACEMENT LOGIQUE
         if self.rectangleBleu[i].getAxe() == 0:
             x -= 2 * self.vitesse
